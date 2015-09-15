@@ -56,11 +56,11 @@ This is an ES6 fork of the Angular Style Guide by John Papa.
       .factory('someFactory', someFactory);
 
   class SomeController {
-    constructor() { }
+      constructor() { }
   }
 
   class someFactory{
-    constructor() { }
+      constructor() { }
   }
   ```
 
@@ -81,7 +81,7 @@ This is an ES6 fork of the Angular Style Guide by John Papa.
 
   // someController.js
   class SomeController{
-    constructor() { }
+      constructor() { }
   }
   ```
 
@@ -90,7 +90,7 @@ This is an ES6 fork of the Angular Style Guide by John Papa.
 
   // someFactory.js
   class someFactory{
-    constructor() { }
+      constructor() { }
   }
   ```
 
@@ -266,7 +266,7 @@ This is an ES6 fork of the Angular Style Guide by John Papa.
   // dashboard.js
 
   class Dashboard {
-    constructor() { }
+      constructor() { }
   }
   ```
 
@@ -288,16 +288,26 @@ This is an ES6 fork of the Angular Style Guide by John Papa.
   ```html
   <!-- avoid -->
   <div ng-controller="Customer">
-      {{ name }}
+      {{name}}
   </div>
   ```
 
   ```html
   <!-- recommended -->
   <div ng-controller="Customer as customer">
-      {{ customer.name }}
+      {{customer.name}}
   </div>
   ```
+  
+controllerAs can also be used in the router like so:
+
+```js
+.when('/dropbox', {
+        templateUrl: 'views/dropbox.html',
+        controller: 'DropboxCtrl',
+        controllerAs: 'dropbox'
+      })
+```
 
 ### controllerAs Controller Syntax
 ###### [Style [Y031](#style-y031)]
@@ -312,66 +322,42 @@ This is an ES6 fork of the Angular Style Guide by John Papa.
 
   ```javascript
   /* avoid */
-  function Customer($scope) {
-      $scope.name = {};
-      $scope.sendMessage = function() { };
+  class Customer { 
+      constructor($scope) {
+        $scope.name = {};
+        $scope.sendMessage = function() { };
+      }
   }
   ```
 
   ```javascript
   /* recommended - but see next section */
-  function Customer() {
-      this.name = {};
-      this.sendMessage = function() { };
+  class Customer {
+      constructor() {
+        this.name = {};
+      }
+      sendMessage(){ }
   }
   ```
 
-### controllerAs with vm
+### controllerAs with fat arrows
 ###### [Style [Y032](#style-y032)]
 
-  - Use a capture variable for `this` when using the `controllerAs` syntax. Choose a consistent variable name such as `vm`, which stands for ViewModel.
+  - Using a capture variable for `this` when using the `controllerAs` syntax, is not necessary with ES6. You can simply use a fat arrow to automatically reference the correct `this` context
 
-  *Why?*: The `this` keyword is contextual and when used within a function inside a controller may change its context. Capturing the context of `this` avoids encountering this problem.
 
   ```javascript
   /* avoid */
-  function Customer() {
-      this.name = {};
-      this.sendMessage = function() { };
+  let self = this;
+  () => {
+      self.foo = 'bar';
   }
   ```
 
   ```javascript
   /* recommended */
-  function Customer() {
-      let vm = this;
-      vm.name = {};
-      vm.sendMessage = function() { };
-  }
-  ```
-
-  Note: You can avoid any [jshint](http://www.jshint.com/) warnings by placing the comment above the line of code. However it is not needed when the function is named using UpperCasing, as this convention means it is a constructor function, which is what a controller is in Angular.
-
-  ```javascript
-  /* jshint validthis: true */
-  let vm = this;
-  ```
-
-  Note: When creating watches in a controller using `controller as`, you can watch the `vm.*` member using the following syntax. (Create watches with caution as they add more load to the digest cycle.)
-
-  ```html
-  <input ng-model="vm.title"/>
-  ```
-
-  ```javascript
-  function SomeController($scope, $log) {
-      let vm = this;
-      vm.title = 'Some Title';
-
-      $scope.$watch('vm.title', function(current, original) {
-          $log.info('vm.title was %s', original);
-          $log.info('vm.title is now %s', current);
-      });
+  () => {
+      this.foo = 'bar';
   }
   ```
 
