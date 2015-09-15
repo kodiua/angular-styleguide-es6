@@ -7,7 +7,6 @@ This is an ES6 fork of the Angular Style Guide by John Papa.
 ## Table of Contents
 
   1. [Single Responsibility](#single-responsibility)
-  1. [IIFE](#iife)
   1. [Modules](#modules)
   1. [Controllers](#controllers)
   1. [Services](#services)
@@ -96,71 +95,6 @@ This is an ES6 fork of the Angular Style Guide by John Papa.
 
 **[Back to top](#table-of-contents)**
 
-## IIFE
-### JavaScript Closures
-###### [Style [Y010](#style-y010)]
-
-  - Wrap Angular components in an Immediately Invoked Function Expression (IIFE).
-
-  *Why?*: An IIFE removes variables from the global scope. This helps prevent variables and function declarations from living longer than expected in the global scope, which also helps avoid variable collisions.
-
-  *Why?*: When your code is minified and bundled into a single file for deployment to a production server, you could have collisions of variables and many global variables. An IIFE protects you against both of these by providing variable scope for each file.
-
-  ```javascript
-  /* avoid */
-  // logger.js
-  angular
-      .module('app')
-      .factory('logger', logger);
-
-  // logger function is added as a global variable
-  function logger() { }
-
-  // storage.js
-  angular
-      .module('app')
-      .factory('storage', storage);
-
-  // storage function is added as a global variable
-  function storage() { }
-  ```
-
-  ```javascript
-  /**
-   * recommended
-   *
-   * no globals are left behind
-   */
-
-  // logger.js
-  (function() {
-      'use strict';
-
-      angular
-          .module('app')
-          .factory('logger', logger);
-
-      function logger() { }
-  })();
-
-  // storage.js
-  (function() {
-      'use strict';
-
-      angular
-          .module('app')
-          .factory('storage', storage);
-
-      function storage() { }
-  })();
-  ```
-
-  - Note: For brevity only, the rest of the examples in this guide may omit the IIFE syntax.
-
-  - Note: IIFE's prevent test code from reaching private members like regular expressions or helper functions which are often good to unit test directly on their own. However you can test these through accessible members or by exposing them through their own component. For example placing helper functions, regular expressions or constants in their own factory or constant.
-
-**[Back to top](#table-of-contents)**
-
 ## Modules
 
 ### Avoid Naming Collisions
@@ -179,7 +113,7 @@ This is an ES6 fork of the Angular Style Guide by John Papa.
 
   ```javascript
   /* avoid */
-  var app = angular.module('app', [
+  let app = angular.module('app', [
       'ngAnimate',
       'ngRoute',
       'app.shared',
@@ -212,7 +146,9 @@ This is an ES6 fork of the Angular Style Guide by John Papa.
   let app = angular.module('app');
   app.controller('SomeController', SomeController);
 
-  function SomeController() { }
+  class SomeController {
+    constructor() { }
+  }
   ```
 
   ```javascript
@@ -221,7 +157,9 @@ This is an ES6 fork of the Angular Style Guide by John Papa.
       .module('app')
       .controller('SomeController', SomeController);
 
-  function SomeController() { }
+  class SomeController {
+    constructor() { }
+  }
   ```
 
 ### Setting vs Getting
@@ -808,7 +746,7 @@ controllerAs can also be used in the router like so:
        * Ask the getAvengers function for the
        * avenger data and wait for the promise
        */
-      return getAvengers().then(function() {
+      return getAvengers().then(() => {
           /**
            * Step 4
            * Perform an action on resolve of final promise
@@ -824,13 +762,13 @@ controllerAs can also be used in the router like so:
          * for the promise
          */
         return dataservice.getAvengers()
-            .then(function(data) {
+            .then((data) => {
                 /**
                  * Step 3
                  * set the data and resolve the promise
                  */
-                vm.avengers = data;
-                return vm.avengers;
+                this.avengers = data;
+                return this.avengers;
         });
   }
   ```
@@ -865,66 +803,78 @@ controllerAs can also be used in the router like so:
       /* spinner directive that can be used anywhere across apps */
       .directive('sharedSpinner', sharedSpinner);
 
-  function orderCalendarRange() {
+  class orderCalendarRange {
       /* implementation details */
   }
 
-  function salesCustomerInfo() {
+  class salesCustomerInfo {
       /* implementation details */
   }
 
-  function sharedSpinner() {
+  class sharedSpinner {
       /* implementation details */
   }
   ```
 
   ```javascript
   /* recommended */
+  
+  /* index.modules.js */
+  
+  angular
+      .module('sales.order')
+      .directive('acmeOrderCalendarRange', orderCalendarRange);
+      
   /* calendarRange.directive.js */
 
   /**
    * @desc order directive that is specific to the order module at a company named Acme
    * @example <div acme-order-calendar-range></div>
    */
-  angular
-      .module('sales.order')
-      .directive('acmeOrderCalendarRange', orderCalendarRange);
-
-  function orderCalendarRange() {
+ 
+  class orderCalendarRange {
       /* implementation details */
   }
   ```
 
   ```javascript
   /* recommended */
+  
+  /* index.modules.js */
+  
+    angular
+      .module('sales.widgets')
+      .directive('acmeSalesCustomerInfo', salesCustomerInfo);
+  
   /* customerInfo.directive.js */
 
   /**
    * @desc sales directive that can be used anywhere across the sales app at a company named Acme
    * @example <div acme-sales-customer-info></div>
    */
-  angular
-      .module('sales.widgets')
-      .directive('acmeSalesCustomerInfo', salesCustomerInfo);
 
-  function salesCustomerInfo() {
+  class salesCustomerInfo {
       /* implementation details */
   }
   ```
 
   ```javascript
   /* recommended */
+  
+  /* index.modules.js */
+  
+   angular
+      .module('shared.widgets')
+      .directive('acmeSharedSpinner', sharedSpinner);
+  
   /* spinner.directive.js */
 
   /**
    * @desc spinner directive that can be used anywhere across apps at a company named Acme
    * @example <div acme-shared-spinner></div>
    */
-  angular
-      .module('shared.widgets')
-      .directive('acmeSharedSpinner', sharedSpinner);
-
-  function sharedSpinner() {
+ 
+  class sharedSpinner {
       /* implementation details */
   }
   ```
@@ -969,17 +919,15 @@ controllerAs can also be used in the router like so:
       .module('app.widgets')
       .directive('myCalendarRange', myCalendarRange);
 
-  function myCalendarRange() {
-      let directive = {
-          link: link,
-          templateUrl: '/template/is/located/here.html',
-          restrict: 'C'
-      };
-      return directive;
-
-      function link(scope, element, attrs) {
-        /* */
-      }
+  class myCalendarRange { 
+    constructor() {
+      this.link = this.linkFunc;
+      this.templateUrl = '/template/is/located/here.html';
+      this.restrict = 'C';
+    }
+    linkFunc(scope, element, attrs) {
+      /* */
+    }
   }
   ```
 
@@ -995,17 +943,15 @@ controllerAs can also be used in the router like so:
       .module('app.widgets')
       .directive('myCalendarRange', myCalendarRange);
 
-  function myCalendarRange() {
-      let directive = {
-          link: link,
-          templateUrl: '/template/is/located/here.html',
-          restrict: 'EA'
-      };
-      return directive;
-
-      function link(scope, element, attrs) {
-        /* */
-      }
+  class myCalendarRange { 
+    constructor() {
+      this.link = this.linkFunc;
+      this.templateUrl = '/template/is/located/here.html';
+      this.restrict = 'EA';
+    }
+    linkFunc(scope, element, attrs) {
+      /* */
+    }
   }
   ```
 
@@ -1962,12 +1908,6 @@ controllerAs can also be used in the router like so:
 
     Note: Find more details and reasoning behind the structure at [this original post on application structure](http://www.johnpapa.net/angular-app-structuring-guidelines/).
 
-### Layout
-###### [Style [Y151](#style-y151)]
-
-  - Place components that define the overall layout of the application in a folder named `layout`. These may include a shell view and controller may act as the container for the app, navigation, menus, content areas, and other regions.
-
-    *Why?*: Organizes all layout in a single place re-used throughout the application.
 
 ### Folders-by-Feature Structure
 ###### [Style [Y152](#style-y152)]
@@ -1995,11 +1935,6 @@ controllerAs can also be used in the router like so:
             calendar.directive.html
             user-profile.directive.js
             user-profile.directive.html
-        layout/
-            shell.html
-            shell.controller.js
-            topnav.html
-            topnav.controller.js
         people/
             attendees.html
             attendees.controller.js
@@ -2132,38 +2067,6 @@ controllerAs can also be used in the router like so:
 **[Back to top](#table-of-contents)**
 
 ## Startup Logic
-
-### Configuration
-###### [Style [Y170](#style-y170)]
-
-  - Inject code into [module configuration](https://docs.angularjs.org/guide/module#module-loading-dependencies) that must be configured before running the angular app. Ideal candidates include providers and constants.
-
-    *Why?*: This makes it easier to have less places for configuration.
-
-  ```javascript
-  angular
-      .module('app')
-      .config(configure);
-
-  configure.$inject =
-      ['routerHelperProvider', 'exceptionHandlerProvider', 'toastr'];
-
-  function configure (routerHelperProvider, exceptionHandlerProvider, toastr) {
-      exceptionHandlerProvider.configure(config.appErrorPrefix);
-      configureStateHelper();
-
-      toastr.options.timeOut = 4000;
-      toastr.options.positionClass = 'toast-bottom-right';
-
-      ////////////////
-
-      function configureStateHelper() {
-          routerHelperProvider.configure({
-              docTitle: 'NG-Modular: '
-          });
-      }
-  }
-  ```
 
 ### Run Blocks
 ###### [Style [Y171](#style-y171)]
