@@ -56,11 +56,11 @@ This is an ES6 fork of the Angular Style Guide by John Papa.
       .factory('someFactory', someFactory);
 
   class SomeController {
-      constructor() { }
+    constructor() { }
   }
 
   class someFactory{
-      constructor() { }
+    constructor() { }
   }
   ```
 
@@ -81,7 +81,7 @@ This is an ES6 fork of the Angular Style Guide by John Papa.
 
   // someController.js
   class SomeController{
-      constructor() { }
+    constructor() { }
   }
   ```
 
@@ -90,7 +90,7 @@ This is an ES6 fork of the Angular Style Guide by John Papa.
 
   // someFactory.js
   class someFactory{
-      constructor() { }
+    constructor() { }
   }
   ```
 
@@ -266,7 +266,7 @@ This is an ES6 fork of the Angular Style Guide by John Papa.
   // dashboard.js
 
   class Dashboard {
-      constructor() { }
+    constructor() { }
   }
   ```
 
@@ -323,20 +323,20 @@ controllerAs can also be used in the router like so:
   ```javascript
   /* avoid */
   class Customer { 
-      constructor($scope) {
-        $scope.name = {};
-        $scope.sendMessage = function() { };
-      }
+    constructor($scope) {
+      $scope.name = {};
+      $scope.sendMessage = function() { };
+    }
   }
   ```
 
   ```javascript
   /* recommended - but see next section */
   class Customer {
-      constructor() {
-        this.name = {};
-      }
-      sendMessage(){ }
+    constructor() {
+      this.name = {};
+    }
+    sendMessage(){ }
   }
   ```
 
@@ -350,178 +350,32 @@ controllerAs can also be used in the router like so:
   /* avoid */
   let self = this;
   () => {
-      self.foo = 'bar';
+    self.foo = 'bar';
   }
   ```
 
   ```javascript
   /* recommended */
   () => {
-      this.foo = 'bar';
+    this.foo = 'bar';
   }
   ```
 
-### Bindable Members Up Top
+### Variables in constructor, functions outside
 ###### [Style [Y033](#style-y033)]
 
-  - Place bindable members at the top of the controller, alphabetized, and not spread through the controller code.
+  - Place variable declarations inside the constructor, alphabetized, and declare functions as members of the class.
 
-    *Why?*: Placing bindable members at the top makes it easy to read and helps you instantly identify which members of the controller can be bound and used in the View.
-
-    *Why?*: Setting anonymous functions in-line can be easy, but when those functions are more than 1 line of code they can reduce the readability. Defining the functions below the bindable members (the functions will be hoisted) moves the implementation details down, keeps the bindable members up top, and makes it easier to read.
 
   ```javascript
-  /* avoid */
-  function Sessions() {
-      let vm = this;
-
-      vm.gotoSession = function() {
-        /* ... */
-      };
-      vm.refresh = function() {
-        /* ... */
-      };
-      vm.search = function() {
-        /* ... */
-      };
-      vm.sessions = [];
-      vm.title = 'Sessions';
-  ```
-
-  ```javascript
-  /* recommended */
-  function Sessions() {
-      let vm = this;
-
-      vm.gotoSession = gotoSession;
-      vm.refresh = refresh;
-      vm.search = search;
-      vm.sessions = [];
-      vm.title = 'Sessions';
-
-      ////////////
-
-      function gotoSession() {
-        /* */
-      }
-
-      function refresh() {
-        /* */
-      }
-
-      function search() {
-        /* */
-      }
-  ```
-
-    ![Controller Using "Above the Fold"](https://raw.githubusercontent.com/johnpapa/angular-styleguide/master/assets/above-the-fold-1.png)
-
-  Note: If the function is a 1 liner consider keeping it right up top, as long as readability is not affected.
-
-  ```javascript
-  /* avoid */
-  function Sessions(data) {
-      let vm = this;
-
-      vm.gotoSession = gotoSession;
-      vm.refresh = function() {
-          /**
-           * lines
-           * of
-           * code
-           * affects
-           * readability
-           */
-      };
-      vm.search = search;
-      vm.sessions = [];
-      vm.title = 'Sessions';
-  ```
-
-  ```javascript
-  /* recommended */
-  function Sessions(sessionDataService) {
-      let vm = this;
-
-      vm.gotoSession = gotoSession;
-      vm.refresh = sessionDataService.refresh; // 1 liner is OK
-      vm.search = search;
-      vm.sessions = [];
-      vm.title = 'Sessions';
-  ```
-
-### Function Declarations to Hide Implementation Details
-###### [Style [Y034](#style-y034)]
-
-  - Use function declarations to hide implementation details. Keep your bindable members up top. When you need to bind a function in a controller, point it to a function declaration that appears later in the file. This is tied directly to the section Bindable Members Up Top. For more details see [this post](http://www.johnpapa.net/angular-function-declarations-function-expressions-and-readable-code).
-
-    *Why?*: Placing bindable members at the top makes it easy to read and helps you instantly identify which members of the controller can be bound and used in the View. (Same as above.)
-
-    *Why?*: Placing the implementation details of a function later in the file moves that complexity out of view so you can see the important stuff up top.
-
-    *Why?*: Function declaration are hoisted so there are no concerns over using a function before it is defined (as there would be with function expressions).
-
-    *Why?*: You never have to worry with function declarations that moving `let a` before `let b` will break your code because `a` depends on `b`.
-
-    *Why?*: Order is critical with function expressions
-
-  ```javascript
-  /**
-   * avoid
-   * Using function expressions.
-   */
-  function Avengers(avengersService, logger) {
-      let vm = this;
-      vm.avengers = [];
-      vm.title = 'Avengers';
-
-      let activate = function() {
-          return getAvengers().then(function() {
-              logger.info('Activated Avengers View');
-          });
-      }
-
-      let getAvengers = function() {
-          return avengersService.getAvengers().then(function(data) {
-              vm.avengers = data;
-              return vm.avengers;
-          });
-      }
-
-      vm.getAvengers = getAvengers;
-
-      activate();
-  }
-  ```
-
-  Notice that the important stuff is scattered in the preceding example. In the example below, notice that the important stuff is up top. For example, the members bound to the controller such as `vm.avengers` and `vm.title`. The implementation details are down below. This is just easier to read.
-
-  ```javascript
-  /*
-   * recommend
-   * Using function declarations
-   * and bindable members up top.
-   */
-  function Avengers(avengersService, logger) {
-      let vm = this;
-      vm.avengers = [];
-      vm.getAvengers = getAvengers;
-      vm.title = 'Avengers';
-
-      activate();
-
-      function activate() {
-          return getAvengers().then(function() {
-              logger.info('Activated Avengers View');
-          });
-      }
-
-      function getAvengers() {
-          return avengersService.getAvengers().then(function(data) {
-              vm.avengers = data;
-              return vm.avengers;
-          });
-      }
+  class Sessions { 
+    constructor() {
+      this.sessions = [];
+      this.title = 'Sessions';
+    }
+    gotoSession() {}
+    refresh() {}
+    search() {}
   }
   ```
 
@@ -541,47 +395,46 @@ controllerAs can also be used in the router like so:
   ```javascript
 
   /* avoid */
-  function Order($http, $q, config, userInfo) {
-      let vm = this;
-      vm.checkCredit = checkCredit;
-      vm.isCreditOk;
-      vm.total = 0;
-
-      function checkCredit() {
-          let settings = {};
-          // Get the credit service base URL from config
-          // Set credit service required headers
-          // Prepare URL query string or data object with request data
-          // Add user-identifying info so service gets the right credit limit for this user.
-          // Use JSONP for this browser if it doesn't support CORS
-          return $http.get(settings)
-              .then(function(data) {
-               // Unpack JSON data in the response object
-                 // to find maxRemainingAmount
-                 vm.isCreditOk = vm.total <= maxRemainingAmount
-              })
-              .catch(function(error) {
-                 // Interpret error
-                 // Cope w/ timeout? retry? try alternate service?
-                 // Re-reject with appropriate error for a user to see
-              });
+  class Order {
+    constructor($http, $q, config, userInfo) {
+      this.isCreditOk = false;
+      this.total = 0;
+    }
+    checkCredit() {
+      let settings = {};
+      // Get the credit service base URL from config
+      // Set credit service required headers
+      // Prepare URL query string or data object with request data
+      // Add user-identifying info so service gets the right credit limit for this user.
+      // Use JSONP for this browser if it doesn't support CORS
+      return $http.get(settings)
+        .then((data) => {
+        // Unpack JSON data in the response object
+        // to find maxRemainingAmount
+          this.isCreditOk = this.total <= maxRemainingAmount
+        })
+        .catch((error) => {
+          // Interpret error
+          // Cope w/ timeout? retry? try alternate service?
+          // Re-reject with appropriate error for a user to see
+        });
       };
   }
   ```
 
   ```javascript
   /* recommended */
-  function Order(creditService) {
-      let vm = this;
-      vm.checkCredit = checkCredit;
-      vm.isCreditOk;
-      vm.total = 0;
-
-      function checkCredit() {
-         return creditService.isOrderTotalOk(vm.total)
-            .then(function(isOk) { vm.isCreditOk = isOk; })
-            .catch(showError);
+  class Order { 
+    constructor (creditService) {
+      this.isCreditOk;
+      this.total = 0;
+    }
+    checkCredit() {
+      return creditService.isOrderTotalOk(this.total)
+        .then((isOk) => { this.isCreditOk = isOk; })
+        .catch(showError);
       };
+    }
   }
   ```
 
