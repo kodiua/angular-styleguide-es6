@@ -209,7 +209,7 @@ This is an ES6 fork of the Angular Style Guide by John Papa.
 
   ```javascript
   /* avoid */
-  var app = angular.module('app');
+  let app = angular.module('app');
   app.controller('SomeController', SomeController);
 
   function SomeController() { }
@@ -252,28 +252,22 @@ This is an ES6 fork of the Angular Style Guide by John Papa.
   /* avoid */
   angular
       .module('app')
-      .controller('Dashboard', function() { })
-      .factory('logger', function() { });
+      .controller('Dashboard', () => { })
   ```
 
   ```javascript
   /* recommended */
 
-  // dashboard.js
+  // index.module.js
   angular
       .module('app')
       .controller('Dashboard', Dashboard);
+      
+  // dashboard.js
 
-  function Dashboard() { }
-  ```
-
-  ```javascript
-  // logger.js
-  angular
-      .module('app')
-      .factory('logger', logger);
-
-  function logger() { }
+  class Dashboard {
+    constructor() { }
+  }
   ```
 
 **[Back to top](#table-of-contents)**
@@ -350,7 +344,7 @@ This is an ES6 fork of the Angular Style Guide by John Papa.
   ```javascript
   /* recommended */
   function Customer() {
-      var vm = this;
+      let vm = this;
       vm.name = {};
       vm.sendMessage = function() { };
   }
@@ -360,7 +354,7 @@ This is an ES6 fork of the Angular Style Guide by John Papa.
 
   ```javascript
   /* jshint validthis: true */
-  var vm = this;
+  let vm = this;
   ```
 
   Note: When creating watches in a controller using `controller as`, you can watch the `vm.*` member using the following syntax. (Create watches with caution as they add more load to the digest cycle.)
@@ -371,7 +365,7 @@ This is an ES6 fork of the Angular Style Guide by John Papa.
 
   ```javascript
   function SomeController($scope, $log) {
-      var vm = this;
+      let vm = this;
       vm.title = 'Some Title';
 
       $scope.$watch('vm.title', function(current, original) {
@@ -393,7 +387,7 @@ This is an ES6 fork of the Angular Style Guide by John Papa.
   ```javascript
   /* avoid */
   function Sessions() {
-      var vm = this;
+      let vm = this;
 
       vm.gotoSession = function() {
         /* ... */
@@ -411,7 +405,7 @@ This is an ES6 fork of the Angular Style Guide by John Papa.
   ```javascript
   /* recommended */
   function Sessions() {
-      var vm = this;
+      let vm = this;
 
       vm.gotoSession = gotoSession;
       vm.refresh = refresh;
@@ -441,7 +435,7 @@ This is an ES6 fork of the Angular Style Guide by John Papa.
   ```javascript
   /* avoid */
   function Sessions(data) {
-      var vm = this;
+      let vm = this;
 
       vm.gotoSession = gotoSession;
       vm.refresh = function() {
@@ -461,7 +455,7 @@ This is an ES6 fork of the Angular Style Guide by John Papa.
   ```javascript
   /* recommended */
   function Sessions(sessionDataService) {
-      var vm = this;
+      let vm = this;
 
       vm.gotoSession = gotoSession;
       vm.refresh = sessionDataService.refresh; // 1 liner is OK
@@ -481,7 +475,7 @@ This is an ES6 fork of the Angular Style Guide by John Papa.
 
     *Why?*: Function declaration are hoisted so there are no concerns over using a function before it is defined (as there would be with function expressions).
 
-    *Why?*: You never have to worry with function declarations that moving `var a` before `var b` will break your code because `a` depends on `b`.
+    *Why?*: You never have to worry with function declarations that moving `let a` before `let b` will break your code because `a` depends on `b`.
 
     *Why?*: Order is critical with function expressions
 
@@ -491,17 +485,17 @@ This is an ES6 fork of the Angular Style Guide by John Papa.
    * Using function expressions.
    */
   function Avengers(avengersService, logger) {
-      var vm = this;
+      let vm = this;
       vm.avengers = [];
       vm.title = 'Avengers';
 
-      var activate = function() {
+      let activate = function() {
           return getAvengers().then(function() {
               logger.info('Activated Avengers View');
           });
       }
 
-      var getAvengers = function() {
+      let getAvengers = function() {
           return avengersService.getAvengers().then(function(data) {
               vm.avengers = data;
               return vm.avengers;
@@ -523,7 +517,7 @@ This is an ES6 fork of the Angular Style Guide by John Papa.
    * and bindable members up top.
    */
   function Avengers(avengersService, logger) {
-      var vm = this;
+      let vm = this;
       vm.avengers = [];
       vm.getAvengers = getAvengers;
       vm.title = 'Avengers';
@@ -562,13 +556,13 @@ This is an ES6 fork of the Angular Style Guide by John Papa.
 
   /* avoid */
   function Order($http, $q, config, userInfo) {
-      var vm = this;
+      let vm = this;
       vm.checkCredit = checkCredit;
       vm.isCreditOk;
       vm.total = 0;
 
       function checkCredit() {
-          var settings = {};
+          let settings = {};
           // Get the credit service base URL from config
           // Set credit service required headers
           // Prepare URL query string or data object with request data
@@ -592,7 +586,7 @@ This is an ES6 fork of the Angular Style Guide by John Papa.
   ```javascript
   /* recommended */
   function Order(creditService) {
-      var vm = this;
+      let vm = this;
       vm.checkCredit = checkCredit;
       vm.isCreditOk;
       vm.total = 0;
@@ -736,7 +730,7 @@ This is an ES6 fork of the Angular Style Guide by John Papa.
   ```javascript
   /* avoid */
   function dataService() {
-    var someValue = '';
+    let someValue = '';
     function save() {
       /* */
     };
@@ -755,8 +749,8 @@ This is an ES6 fork of the Angular Style Guide by John Papa.
   ```javascript
   /* recommended */
   function dataService() {
-      var someValue = '';
-      var service = {
+      let someValue = '';
+      let service = {
           save: save,
           someValue: someValue,
           validate: validate
@@ -790,7 +784,7 @@ This is an ES6 fork of the Angular Style Guide by John Papa.
 
     *Why?*: Function declaration are hoisted so there are no concerns over using a function before it is defined (as there would be with function expressions).
 
-    *Why?*: You never have to worry with function declarations that moving `var a` before `var b` will break your code because `a` depends on `b`.
+    *Why?*: You never have to worry with function declarations that moving `let a` before `let b` will break your code because `a` depends on `b`.
 
     *Why?*: Order is critical with function expressions
 
@@ -800,30 +794,30 @@ This is an ES6 fork of the Angular Style Guide by John Papa.
    * Using function expressions
    */
    function dataservice($http, $location, $q, exception, logger) {
-      var isPrimed = false;
-      var primePromise;
+      let isPrimed = false;
+      let primePromise;
 
-      var getAvengers = function() {
+      let getAvengers = function() {
           // implementation details go here
       };
 
-      var getAvengerCount = function() {
+      let getAvengerCount = function() {
           // implementation details go here
       };
 
-      var getAvengersCast = function() {
+      let getAvengersCast = function() {
          // implementation details go here
       };
 
-      var prime = function() {
+      let prime = function() {
          // implementation details go here
       };
 
-      var ready = function(nextPromises) {
+      let ready = function(nextPromises) {
           // implementation details go here
       };
 
-      var service = {
+      let service = {
           getAvengersCast: getAvengersCast,
           getAvengerCount: getAvengerCount,
           getAvengers: getAvengers,
@@ -841,10 +835,10 @@ This is an ES6 fork of the Angular Style Guide by John Papa.
    * and accessible members up top.
    */
   function dataservice($http, $location, $q, exception, logger) {
-      var isPrimed = false;
-      var primePromise;
+      let isPrimed = false;
+      let primePromise;
 
-      var service = {
+      let service = {
           getAvengersCast: getAvengersCast,
           getAvengerCount: getAvengerCount,
           getAvengers: getAvengers,
@@ -936,7 +930,7 @@ This is an ES6 fork of the Angular Style Guide by John Papa.
   Avengers.$inject = ['dataservice', 'logger'];
 
   function Avengers(dataservice, logger) {
-      var vm = this;
+      let vm = this;
       vm.avengers = [];
 
       activate();
@@ -1137,7 +1131,7 @@ This is an ES6 fork of the Angular Style Guide by John Papa.
       .directive('myCalendarRange', myCalendarRange);
 
   function myCalendarRange() {
-      var directive = {
+      let directive = {
           link: link,
           templateUrl: '/template/is/located/here.html',
           restrict: 'C'
@@ -1163,7 +1157,7 @@ This is an ES6 fork of the Angular Style Guide by John Papa.
       .directive('myCalendarRange', myCalendarRange);
 
   function myCalendarRange() {
-      var directive = {
+      let directive = {
           link: link,
           templateUrl: '/template/is/located/here.html',
           restrict: 'EA'
@@ -1199,7 +1193,7 @@ This is an ES6 fork of the Angular Style Guide by John Papa.
       .directive('myExample', myExample);
 
   function myExample() {
-      var directive = {
+      let directive = {
           restrict: 'EA',
           templateUrl: 'app/feature/example.directive.html',
           scope: {
@@ -1225,7 +1219,7 @@ This is an ES6 fork of the Angular Style Guide by John Papa.
 
   function ExampleController($scope) {
       // Injecting $scope just for comparison
-      var vm = this;
+      let vm = this;
 
       vm.min = 3;
 
@@ -1273,7 +1267,7 @@ This is an ES6 fork of the Angular Style Guide by John Papa.
       .directive('myExample', myExample);
 
   function myExample() {
-      var directive = {
+      let directive = {
           restrict: 'EA',
           templateUrl: 'app/feature/example.directive.html',
           scope: {
@@ -1288,7 +1282,7 @@ This is an ES6 fork of the Angular Style Guide by John Papa.
   }
 
   function ExampleController() {
-      var vm = this;
+      let vm = this;
       vm.min = 3;
       console.log('CTRL: vm.min = %s', vm.min);
       console.log('CTRL: vm.max = %s', vm.max);
@@ -1319,7 +1313,7 @@ This is an ES6 fork of the Angular Style Guide by John Papa.
   ```javascript
   /* avoid */
   function Avengers(dataservice) {
-      var vm = this;
+      let vm = this;
       vm.avengers = [];
       vm.title = 'Avengers';
 
@@ -1333,7 +1327,7 @@ This is an ES6 fork of the Angular Style Guide by John Papa.
   ```javascript
   /* recommended */
   function Avengers(dataservice) {
-      var vm = this;
+      let vm = this;
       vm.avengers = [];
       vm.title = 'Avengers';
 
@@ -1370,7 +1364,7 @@ This is an ES6 fork of the Angular Style Guide by John Papa.
       .controller('Avengers', Avengers);
 
   function Avengers(movieService) {
-      var vm = this;
+      let vm = this;
       // unresolved
       vm.movies;
       // resolved asynchronously
@@ -1409,7 +1403,7 @@ This is an ES6 fork of the Angular Style Guide by John Papa.
 
   Avengers.$inject = ['moviesPrepService'];
   function Avengers(moviesPrepService) {
-      var vm = this;
+      let vm = this;
       vm.movies = moviesPrepService.movies;
   }
   ```
@@ -1447,7 +1441,7 @@ This is an ES6 fork of the Angular Style Guide by John Papa.
 
   Avengers.$inject = ['moviesPrepService'];
   function Avengers(moviesPrepService) {
-        var vm = this;
+        let vm = this;
         vm.movies = moviesPrepService.movies;
   }
   ```
