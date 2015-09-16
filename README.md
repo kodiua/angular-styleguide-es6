@@ -1512,11 +1512,10 @@ controllerAs can also be used in the router like so:
       .module('app')
       .run(runBlock);
 
-  runBlock.$inject = ['authenticator', 'translator'];
-
   function runBlock(authenticator, translator) {
-      authenticator.initialize();
-      translator.initialize();
+    'ngInject';
+    authenticator.initialize();
+    translator.initialize();
   }
   ```
 
@@ -2015,161 +2014,16 @@ Unit testing helps maintain clean code, as such I included some of my recommenda
 
 **[Back to top](#table-of-contents)**
 
-## File Templates and Snippets
-Use file templates or snippets to help follow consistent styles and patterns. Here are templates and/or snippets for some of the web development editors and IDEs.
-
-### Sublime Text
-###### [Style [Y250](#style-y250)]
-
-  - Angular snippets that follow these styles and guidelines.
-
-    - Download the [Sublime Angular snippets](assets/sublime-angular-snippets?raw=true)
-    - Place it in your Packages folder
-    - Restart Sublime
-    - In a JavaScript file type these commands followed by a `TAB`
-
-    ```javascript
-    ngcontroller // creates an Angular controller
-    ngdirective  // creates an Angular directive
-    ngfactory    // creates an Angular factory
-    ngmodule     // creates an Angular module
-    ngservice    // creates an Angular service
-    ngfilter     // creates an Angular filter
-    ```
-
-### Visual Studio
-###### [Style [Y251](#style-y251)]
-
-  - Angular file templates that follow these styles and guidelines can be found at [SideWaffle](http://www.sidewaffle.com)
-
-    - Download the [SideWaffle](http://www.sidewaffle.com) Visual Studio extension (vsix file)
-    - Run the vsix file
-    - Restart Visual Studio
-
-### WebStorm
-###### [Style [Y252](#style-y252)]
-
-  - Angular snippets and file templates that follow these styles and guidelines. You can import them into your WebStorm settings:
-
-    - Download the [WebStorm Angular file templates and snippets](assets/webstorm-angular-file-template.settings.jar?raw=true)
-    - Open WebStorm and go to the `File` menu
-    - Choose the `Import Settings` menu option
-    - Select the file and click `OK`
-    - In a JavaScript file type these commands followed by a `TAB`:
-
-    ```javascript
-    ng-c // creates an Angular controller
-    ng-f // creates an Angular factory
-    ng-m // creates an Angular module
-    ```
-
-### Atom
-###### [Style [Y253](#style-y253)]
-
-  - Angular snippets that follow these styles and guidelines.
-    ```
-    apm install angularjs-styleguide-snippets
-    ```
-    or
-    - Open Atom, then open the Package Manager (Packages -> Settings View -> Install Packages/Themes)
-    - Search for the package 'angularjs-styleguide-snippets'
-    - Click 'Install' to install the package
-
-  - In a JavaScript file type these commands followed by a `TAB`
-
-    ```javascript
-    ngcontroller // creates an Angular controller
-    ngdirective // creates an Angular directive
-    ngfactory // creates an Angular factory
-    ngmodule // creates an Angular module
-    ngservice // creates an Angular service
-    ngfilter // creates an Angular filter
-    ```
-
-### Brackets
-###### [Style [Y254](#style-y254)]
-
-  - Angular snippets that follow these styles and guidelines.
-    - Download the [Brackets Angular snippets](assets/brackets-angular-snippets.yaml?raw=true)
-    - Brackets Extension manager ( File > Extension manager )
-    - Install ['Brackets Snippets (by edc)'](https://github.com/chuyik/brackets-snippets)
-    - Click the light bulb in brackets' right gutter
-    - Click `Settings` and then `Import`
-    - Choose the file and select to skip or override
-    - Click `Start Import`
-
-  - In a JavaScript file type these commands followed by a `TAB`
-
-    ```javascript
-    // These are full file snippets containing an IIFE
-    ngcontroller // creates an Angular controller
-    ngdirective  // creates an Angular directive
-    ngfactory    // creates an Angular factory
-    ngapp        // creates an Angular module setter
-    ngservice    // creates an Angular service
-    ngfilter     // creates an Angular filter
-
-    // These are partial snippets intended to chained
-    ngmodule     // creates an Angular module getter
-    ngstate      // creates an Angular UI Router state defintion
-    ngconfig     // defines a configuration phase function
-    ngrun        // defines a run phase function
-    ngroute      // defines an Angular ngRoute 'when' definition
-    ngtranslate  // uses $translate service with its promise
-    ```
-
-### vim
-###### [Style [Y255](#style-y255)]
-
-  - vim snippets that follow these styles and guidelines.
-
-    - Download the [vim Angular snippets](assets/vim-angular-snippets?raw=true)
-    - set [neosnippet.vim](https://github.com/Shougo/neosnippet.vim)
-    - copy snippets to snippet directory
-
-  - vim UltiSnips snippets that follow these styles and guidelines.
-
-    - Download the [vim Angular UltiSnips snippets](assets/vim-angular-ultisnips?raw=true)
-    - set [UltiSnips](https://github.com/SirVer/ultisnips)
-    - copy snippets to UltiSnips directory
-
-    ```javascript
-    ngcontroller // creates an Angular controller
-    ngdirective  // creates an Angular directive
-    ngfactory    // creates an Angular factory
-    ngmodule     // creates an Angular module
-    ngservice    // creates an Angular service
-    ngfilter     // creates an Angular filter
-    ```
-
-### Visual Studio Code
-
-###### [Style [Y256](#style-y256)]
-
-  - [Visual Studio Code](http://code.visualstudio.com) snippets that follow these styles and guidelines.
-
-    - Download the [VS Code Angular snippets](assets/vscode-snippets/javascript.json?raw=true)
-    - copy snippets to snippet directory, or alternatively copy and paste the snippets into your existing ones
-
-    ```javascript
-    ngcontroller // creates an Angular controller
-    ngdirective  // creates an Angular directive
-    ngfactory    // creates an Angular factory
-    ngmodule     // creates an Angular module
-    ngservice    // creates an Angular service
-    ```
-
-**[Back to top](#table-of-contents)**
 
 ## Yeoman Generator
 ###### [Style [Y260](#style-y260)]
 
-You can use the [HotTowel yeoman generator](http://jpapa.me/yohottowel) to create an app that serves as a starting point for Angular that follows this style guide.
+You can use the [generator-gulp-angular](https://github.com/Swiip/generator-gulp-angular) to create an app that serves as a starting point for Angular that follows this style guide.
 
-1. Install generator-hottowel
+1. Install generator-gulp-angular
 
   ```
-  npm install -g generator-hottowel
+  npm install -g generator-gulp-angular
   ```
 
 2. Create a new folder and change directory to it
@@ -2182,7 +2036,7 @@ You can use the [HotTowel yeoman generator](http://jpapa.me/yohottowel) to creat
 3. Run the generator
 
   ```
-  yo hottowel helloWorld
+  yo gulp-angular
   ```
 
 **[Back to top](#table-of-contents)**
@@ -2206,9 +2060,10 @@ Client-side routing is important for creating a navigation flow between views an
         .module('app.customers')
         .run(appRun);
 
-    /* @ngInject */
+    
     function appRun(routerHelper) {
-        routerHelper.configureStates(getStates());
+      'ngInject';
+      routerHelper.configureStates(getStates());
     }
 
     function getStates() {
@@ -2231,40 +2086,37 @@ Client-side routing is important for creating a navigation flow between views an
         .module('blocks.router')
         .provider('routerHelper', routerHelperProvider);
 
-    routerHelperProvider.$inject = ['$locationProvider', '$stateProvider', '$urlRouterProvider'];
-    /* @ngInject */
+    
     function routerHelperProvider($locationProvider, $stateProvider, $urlRouterProvider) {
-        /* jshint validthis:true */
-        this.$get = RouterHelper;
+      'ngInject';
+      /* jshint validthis:true */
+      this.$get = RouterHelper;
 
-        $locationProvider.html5Mode(true);
+      $locationProvider.html5Mode(true);
+      function RouterHelper($state) {
+        'ngInject';
+        var hasOtherwise = false;
+        var service = {
+          configureStates: configureStates,
+          getStates: getStates
+        };
 
-        RouterHelper.$inject = ['$state'];
-        /* @ngInject */
-        function RouterHelper($state) {
-            var hasOtherwise = false;
+        return service;
 
-            var service = {
-                configureStates: configureStates,
-                getStates: getStates
-            };
+        ///////////////
 
-            return service;
-
-            ///////////////
-
-            function configureStates(states, otherwisePath) {
-                states.forEach(function(state) {
-                    $stateProvider.state(state.state, state.config);
-                });
-                if (otherwisePath && !hasOtherwise) {
-                    hasOtherwise = true;
-                    $urlRouterProvider.otherwise(otherwisePath);
-                }
-            }
-
-            function getStates() { return $state.get(); }
+        function configureStates(states, otherwisePath) {
+          states.forEach((state) => {
+            $stateProvider.state(state.state, state.config);
+          });
+          if (otherwisePath && !hasOtherwise) {
+            hasOtherwise = true;
+            $urlRouterProvider.otherwise(otherwisePath);
+          }
         }
+
+        function getStates() { return $state.get(); }
+      }
     }
     ```
 
