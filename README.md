@@ -1,6 +1,6 @@
 # Angular Style Guide
 
-This is an ES6 fork of the Angular Style Guide by John Papa. 
+This is an ES6 fork of the Angular Style Guide by John Papa. It is intended for use with the generator-gulp-angular and Babel, and things that do not apply in that circumstance have been removed.
 
 *Opinionated Angular style guide for teams by [@john_papa](//twitter.com/john_papa)*
 
@@ -13,7 +13,6 @@ This is an ES6 fork of the Angular Style Guide by John Papa.
   1. [Data Services](#data-services)
   1. [Directives](#directives)
   1. [Resolving Promises for a Controller](#resolving-promises-for-a-controller)
-  1. [Manual Annotating for Dependency Injection](#manual-annotating-for-dependency-injection)
   1. [Minification and Annotation](#minification-and-annotation)
   1. [Exception Handling](#exception-handling)
   1. [Naming](#naming)
@@ -790,52 +789,6 @@ controllerAs can also be used in the router like so:
 
 **[Back to top](#table-of-contents)**
 
-## Resolving Promises for a Controller
-### Controller Activation Promises
-###### [Style [Y080](#style-y080)]
-
-  - Resolve start-up logic for a controller in an `activate` function.
-
-    *Why?*: Placing start-up logic in a consistent place in the controller makes it easier to locate, more consistent to test, and helps avoid spreading out the activation logic across the controller.
-
-    *Why?*: The controller `activate` makes it convenient to re-use the logic for a refresh for the controller/View, keeps the logic together, gets the user to the View faster, makes animations easy on the `ng-view` or `ui-view`, and feels snappier to the user.
-
-    Note: If you need to conditionally cancel the route before you start using the controller, use a [route resolve](#style-y081) instead.
-
-  ```javascript
-  /* avoid */
-  function Avengers(dataservice) {
-      let vm = this;
-      vm.avengers = [];
-      vm.title = 'Avengers';
-
-      dataservice.getAvengers().then(function(data) {
-          vm.avengers = data;
-          return vm.avengers;
-      });
-  }
-  ```
-
-  ```javascript
-  /* recommended */
-  function Avengers(dataservice) {
-      let vm = this;
-      vm.avengers = [];
-      vm.title = 'Avengers';
-
-      activate();
-
-      ////////////
-
-      function activate() {
-          return dataservice.getAvengers().then(function(data) {
-              vm.avengers = data;
-              return vm.avengers;
-          });
-      }
-  }
-  ```
-
 ### Route Resolve Promises
 ###### [Style [Y081](#style-y081)]
 
@@ -851,18 +804,16 @@ controllerAs can also be used in the router like so:
 
   ```javascript
   /* avoid */
-  angular
-      .module('app')
-      .controller('Avengers', Avengers);
-
-  function Avengers(movieService) {
-      let vm = this;
+  
+  class Avengers { 
+    constructor(movieService) {
       // unresolved
-      vm.movies;
+      this.movies;
       // resolved asynchronously
-      movieService.getMovies().then(function(response) {
-          vm.movies = response.movies;
+      movieService.getMovies().then((response) => {
+          this.movies = response.movies;
       });
+    }
   }
   ```
 
@@ -870,33 +821,27 @@ controllerAs can also be used in the router like so:
   /* better */
 
   // route-config.js
-  angular
-      .module('app')
-      .config(config);
-
+ 
   function config($routeProvider) {
-      $routeProvider
-          .when('/avengers', {
-              templateUrl: 'avengers.html',
-              controller: 'Avengers',
-              controllerAs: 'vm',
-              resolve: {
-                  moviesPrepService: function(movieService) {
-                      return movieService.getMovies();
-                  }
-              }
-          });
+    $routeProvider
+      .when('/avengers', {
+        templateUrl: 'avengers.html',
+        controller: 'Avengers',
+        controllerAs: 'vm',
+        resolve: {
+          moviesPrepService: function(movieService) {
+            return movieService.getMovies();
+          }
+        }
+      });
   }
 
-  // avengers.js
-  angular
-      .module('app')
-      .controller('Avengers', Avengers);
+  // avengers.controller.js
 
-  Avengers.$inject = ['moviesPrepService'];
-  function Avengers(moviesPrepService) {
-      let vm = this;
-      vm.movies = moviesPrepService.movies;
+  class Avengers { 
+    constructor(moviesPrepService) {
+      this.movies = moviesPrepService.movies;
+    }
   }
   ```
 
@@ -906,173 +851,31 @@ controllerAs can also be used in the router like so:
   /* even better */
 
   // route-config.js
-  angular
-      .module('app')
-      .config(config);
 
   function config($routeProvider) {
-      $routeProvider
-          .when('/avengers', {
-              templateUrl: 'avengers.html',
-              controller: 'Avengers',
-              controllerAs: 'vm',
-              resolve: {
-                  moviesPrepService: moviesPrepService
-              }
-          });
+    $routeProvider
+      .when('/avengers', {
+        templateUrl: 'avengers.html',
+        controller: 'Avengers',
+        controllerAs: 'vm',
+        resolve: {
+          moviesPrepService: moviesPrepService
+        }
+      });
   }
 
   function moviesPrepService(movieService) {
       return movieService.getMovies();
   }
 
-  // avengers.js
-  angular
-      .module('app')
-      .controller('Avengers', Avengers);
-
-  Avengers.$inject = ['moviesPrepService'];
-  function Avengers(moviesPrepService) {
-        let vm = this;
-        vm.movies = moviesPrepService.movies;
+  // avengers.controller.js
+ 
+  class Avengers { 
+    constructor(moviesPrepService) {
+      this.movies = moviesPrepService.movies;
+    }
   }
   ```
-    Note: The code example's dependency on `movieService` is not minification safe on its own. For details on how to make this code minification safe, see the sections on [dependency injection](#manual-annotating-for-dependency-injection) and on [minification and annotation](#minification-and-annotation).
-
-**[Back to top](#table-of-contents)**
-
-## Manual Annotating for Dependency Injection
-
-### UnSafe from Minification
-###### [Style [Y090](#style-y090)]
-
-  - Avoid using the shortcut syntax of declaring dependencies without using a minification-safe approach.
-
-    *Why?*: The parameters to the component (e.g. controller, factory, etc) will be converted to mangled variables. For example, `common` and `dataservice` may become `a` or `b` and not be found by Angular.
-
-    ```javascript
-    /* avoid - not minification-safe*/
-    angular
-        .module('app')
-        .controller('Dashboard', Dashboard);
-
-    function Dashboard(common, dataservice) {
-    }
-    ```
-
-    This code may produce mangled variables when minified and thus cause runtime errors.
-
-    ```javascript
-    /* avoid - not minification-safe*/
-    angular.module('app').controller('Dashboard', d);function d(a, b) { }
-    ```
-
-### Manually Identify Dependencies
-###### [Style [Y091](#style-y091)]
-
-  - Use `$inject` to manually identify your dependencies for Angular components.
-
-    *Why?*: This technique mirrors the technique used by [`ng-annotate`](https://github.com/olov/ng-annotate), which I recommend for automating the creation of minification safe dependencies. If `ng-annotate` detects injection has already been made, it will not duplicate it.
-
-    *Why?*: This safeguards your dependencies from being vulnerable to minification issues when parameters may be mangled. For example, `common` and `dataservice` may become `a` or `b` and not be found by Angular.
-
-    *Why?*: Avoid creating in-line dependencies as long lists can be difficult to read in the array. Also it can be confusing that the array is a series of strings while the last item is the component's function.
-
-    ```javascript
-    /* avoid */
-    angular
-        .module('app')
-        .controller('Dashboard',
-            ['$location', '$routeParams', 'common', 'dataservice',
-                function Dashboard($location, $routeParams, common, dataservice) {}
-            ]);
-    ```
-
-    ```javascript
-    /* avoid */
-    angular
-      .module('app')
-      .controller('Dashboard',
-          ['$location', '$routeParams', 'common', 'dataservice', Dashboard]);
-
-    function Dashboard($location, $routeParams, common, dataservice) {
-    }
-    ```
-
-    ```javascript
-    /* recommended */
-    angular
-        .module('app')
-        .controller('Dashboard', Dashboard);
-
-    Dashboard.$inject = ['$location', '$routeParams', 'common', 'dataservice'];
-
-    function Dashboard($location, $routeParams, common, dataservice) {
-    }
-    ```
-
-    Note: When your function is below a return statement the `$inject` may be unreachable (this may happen in a directive). You can solve this by moving the Controller outside of the directive.
-
-    ```javascript
-    /* avoid */
-    // inside a directive definition
-    function outer() {
-        var ddo = {
-            controller: DashboardPanelController,
-            controllerAs: 'vm'
-        };
-        return ddo;
-
-        DashboardPanelController.$inject = ['logger']; // Unreachable
-        function DashboardPanelController(logger) {
-        }
-    }
-    ```
-
-    ```javascript
-    /* recommended */
-    // outside a directive definition
-    function outer() {
-        var ddo = {
-            controller: DashboardPanelController,
-            controllerAs: 'vm'
-        };
-        return ddo;
-    }
-
-    DashboardPanelController.$inject = ['logger'];
-    function DashboardPanelController(logger) {
-    }
-    ```
-
-### Manually Identify Route Resolver Dependencies
-###### [Style [Y092](#style-y092)]
-
-  - Use `$inject` to manually identify your route resolver dependencies for Angular components.
-
-    *Why?*: This technique breaks out the anonymous function for the route resolver, making it easier to read.
-
-    *Why?*: An `$inject` statement can easily precede the resolver to handle making any dependencies minification safe.
-
-    ```javascript
-    /* recommended */
-    function config($routeProvider) {
-        $routeProvider
-            .when('/avengers', {
-                templateUrl: 'avengers.html',
-                controller: 'AvengersController',
-                controllerAs: 'vm',
-                resolve: {
-                    moviesPrepService: moviesPrepService
-                }
-            });
-    }
-
-    moviesPrepService.$inject = ['movieService'];
-    function moviesPrepService(movieService) {
-        return movieService.getMovies();
-    }
-    ```
 
 **[Back to top](#table-of-contents)**
 
@@ -1081,57 +884,26 @@ controllerAs can also be used in the router like so:
 ### ng-annotate
 ###### [Style [Y100](#style-y100)]
 
-  - Use [ng-annotate](//github.com/olov/ng-annotate) for [Gulp](http://gulpjs.com) or [Grunt](http://gruntjs.com) and comment functions that need automated dependency injection using `/* @ngInject */`
+  - Use [ng-annotate](//github.com/olov/ng-annotate) for [Gulp](http://gulpjs.com) or [Grunt](http://gruntjs.com) and comment functions that need automated dependency injection using `'ngInject'`
 
     *Why?*: This safeguards your code from any dependencies that may not be using minification-safe practices.
 
-    *Why?*: [`ng-min`](https://github.com/btford/ngmin) is deprecated
-
-    >I prefer Gulp as I feel it is easier to write, to read, and to debug.
-
-    The following code is not using minification safe dependencies.
-
     ```javascript
-    angular
-        .module('app')
-        .controller('Avengers', Avengers);
-
-    /* @ngInject */
-    function Avengers(storage, avengerService) {
-        var vm = this;
-        vm.heroSearch = '';
-        vm.storeHero = storeHero;
-
-        function storeHero() {
-            var hero = avengerService.find(vm.heroSearch);
-            storage.save(hero.name, hero);
-        }
+    class Avengers { 
+      constructor(storage, avengerService) {
+        'ngInject';
+      
+        this.heroSearch = '';
+        
+        this.avengerService = avengerService;
+        this.storage = storage;
+      }
+      storeHero() {
+        let hero = this.avengerService.find(this.heroSearch);
+        this.storage.save(hero.name, hero);
+      }
     }
     ```
-
-    When the above code is run through ng-annotate it will produce the following output with the `$inject` annotation and become minification-safe.
-
-    ```javascript
-    angular
-        .module('app')
-        .controller('Avengers', Avengers);
-
-    /* @ngInject */
-    function Avengers(storage, avengerService) {
-        var vm = this;
-        vm.heroSearch = '';
-        vm.storeHero = storeHero;
-
-        function storeHero() {
-            var hero = avengerService.find(vm.heroSearch);
-            storage.save(hero.name, hero);
-        }
-    }
-
-    Avengers.$inject = ['storage', 'avengerService'];
-    ```
-
-    Note: If `ng-annotate` detects injection has already been made (e.g. `@ngInject` was detected), it will not duplicate the `$inject` code.
 
     Note: When using a route resolver you can prefix the resolver's function with `/* @ngInject */` and it will produce properly annotated code, keeping any injected dependencies minification safe.
 
@@ -1155,37 +927,6 @@ controllerAs can also be used in the router like so:
     > Note: Starting from Angular 1.3 you can use the [`ngApp`](https://docs.angularjs.org/api/ng/directive/ngApp) directive's `ngStrictDi` parameter to detect any potentially missing minification safe dependencies. When present the injector will be created in "strict-di" mode causing the application to fail to invoke functions which do not use explicit function annotation (these may not be minification safe). Debugging info will be logged to the console to help track down the offending code. I prefer to only use `ng-strict-di` for debugging purposes only.
     `<body ng-app="APP" ng-strict-di>`
 
-### Use Gulp or Grunt for ng-annotate
-###### [Style [Y101](#style-y101)]
-
-  - Use [gulp-ng-annotate](https://www.npmjs.org/package/gulp-ng-annotate) or [grunt-ng-annotate](https://www.npmjs.org/package/grunt-ng-annotate) in an automated build task. Inject `/* @ngInject */` prior to any function that has dependencies.
-
-    *Why?*: ng-annotate will catch most dependencies, but it sometimes requires hints using the `/* @ngInject */` syntax.
-
-    The following code is an example of a gulp task using ngAnnotate
-
-    ```javascript
-    gulp.task('js', ['jshint'], function() {
-        var source = pkg.paths.js;
-
-        return gulp.src(source)
-            .pipe(sourcemaps.init())
-            .pipe(concat('all.min.js', {newLine: ';'}))
-            // Annotate before uglify so the code get's min'd properly.
-            .pipe(ngAnnotate({
-                // true helps add where @ngInject is not used. It infers.
-                // Doesn't work with resolve, so we must be explicit there
-                add: true
-            }))
-            .pipe(bytediff.start())
-            .pipe(uglify({mangle: true}))
-            .pipe(bytediff.stop())
-            .pipe(sourcemaps.write('./'))
-            .pipe(gulp.dest(pkg.paths.dev));
-    });
-
-    ```
-
 **[Back to top](#table-of-contents)**
 
 ## Exception Handling
@@ -1201,33 +942,29 @@ controllerAs can also be used in the router like so:
 
     ```javascript
     /* recommended */
-    angular
-        .module('blocks.exception')
-        .config(exceptionConfig);
-
-    exceptionConfig.$inject = ['$provide'];
 
     function exceptionConfig($provide) {
-        $provide.decorator('$exceptionHandler', extendExceptionHandler);
+      'ngInject';
+      $provide.decorator('$exceptionHandler', extendExceptionHandler);
     }
 
-    extendExceptionHandler.$inject = ['$delegate', 'toastr'];
 
     function extendExceptionHandler($delegate, toastr) {
-        return function(exception, cause) {
-            $delegate(exception, cause);
-            var errorData = {
-                exception: exception,
-                cause: cause
-            };
-            /**
-             * Could add the error to a service's collection,
-             * add errors to $rootScope, log errors to remote web server,
-             * or log locally. Or throw hard. It is entirely up to you.
-             * throw exception;
-             */
-            toastr.error(exception.msg, errorData);
+      'ngInject';
+      return function(exception, cause) {
+        $delegate(exception, cause);
+        let errorData = {
+          exception: exception,
+          cause: cause
         };
+        /**
+         * Could add the error to a service's collection,
+         * add errors to $rootScope, log errors to remote web server,
+         * or log locally. Or throw hard. It is entirely up to you.
+         * throw exception;
+         */
+        toastr.error(exception.msg, errorData);
+      };
     }
     ```
 
@@ -1242,23 +979,17 @@ controllerAs can also be used in the router like so:
 
     ```javascript
     /* recommended */
-    angular
-        .module('blocks.exception')
-        .factory('exception', exception);
 
-    exception.$inject = ['logger'];
-
-    function exception(logger) {
-        var service = {
-            catcher: catcher
+    class exception {
+      constructor(logger) {
+        'ngInject';
+        this.logger = logger;
+      }
+      catcher(message) {
+        return (reason) => {
+          this.logger.error(message, reason);
         };
-        return service;
-
-        function catcher(message) {
-            return function(reason) {
-                logger.error(message, reason);
-            };
-        }
+      }
     }
     ```
 
@@ -1273,7 +1004,7 @@ controllerAs can also be used in the router like so:
 
     ```javascript
     /* recommended */
-    var handlingRouteChangeError = false;
+    let handlingRouteChangeError = false;
 
     function handleRoutingErrors() {
         /**
@@ -1285,10 +1016,10 @@ controllerAs can also be used in the router like so:
             function(event, current, previous, rejection) {
                 if (handlingRouteChangeError) { return; }
                 handlingRouteChangeError = true;
-                var destination = (current && (current.title ||
+                let destination = (current && (current.title ||
                     current.name || current.loadedTemplateUrl)) ||
                     'unknown target';
-                var msg = 'Error routing to ' + destination + '. ' +
+                let msg = 'Error routing to ' + destination + '. ' +
                     (rejection.msg || '');
 
                 /**
@@ -1423,9 +1154,6 @@ controllerAs can also be used in the router like so:
      */
 
     // avengers.controller.js
-    angular
-        .module
-        .controller('HeroAvengersController', HeroAvengersController);
 
     class HeroAvengersController{
       constructor() { }
@@ -1445,9 +1173,6 @@ controllerAs can also be used in the router like so:
      */
 
     // avengers.controller.js
-    angular
-        .module
-        .controller('AvengersController', AvengersController);
 
     class AvengersController{
       constructor() { }
@@ -1473,11 +1198,10 @@ controllerAs can also be used in the router like so:
      */
 
     // logger.service.js
-    angular
-        .module
-        .factory('logger', logger);
 
-    function logger() { }
+    class logger { 
+      constructor() { }
+    }
     ```
 
     ```javascript
@@ -1486,18 +1210,16 @@ controllerAs can also be used in the router like so:
      */
 
     // credit.service.js
-    angular
-        .module
-        .factory('creditService', creditService);
 
-    function creditService() { }
+    class creditService { 
+      constructor() { }
+    }
 
     // customer.service.js
-    angular
-        .module
-        .service('customersService', customersService);
 
-    function customersService() { }
+    class customersService { 
+      constructor() { }
+    }
     ```
 
 ### Directive Component Names
@@ -1513,13 +1235,12 @@ controllerAs can also be used in the router like so:
      */
 
     // avenger-profile.directive.js
-    angular
-        .module
-        .directive('xxAvengerProfile', xxAvengerProfile);
 
     // usage is <xx-avenger-profile> </xx-avenger-profile>
 
-    function xxAvengerProfile() { }
+    class xxAvengerProfile {
+      constructor() { }
+    }
     ```
 
 ### Modules
