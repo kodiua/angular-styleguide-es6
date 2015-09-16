@@ -9,7 +9,6 @@ This is an ES6 fork of the Angular Style Guide by John Papa.
   1. [Single Responsibility](#single-responsibility)
   1. [Modules](#modules)
   1. [Controllers](#controllers)
-  1. [Services](#services)
   1. [Factories](#factories)
   1. [Data Services](#data-services)
   1. [Directives](#directives)
@@ -299,24 +298,6 @@ controllerAs can also be used in the router like so:
   }
   ```
 
-### Variables in constructor, functions outside
-###### [Style [Y033](#style-y033)]
-
-  - Place variable declarations inside the constructor, alphabetized, and declare functions as members of the class.
-
-
-  ```javascript
-  class Sessions { 
-    constructor() {
-      this.sessions = [];
-      this.title = 'Sessions';
-    }
-    gotoSession() {}
-    refresh() {}
-    search() {}
-  }
-  ```
-
 ### Defer Controller Logic to Services
 ###### [Style [Y035](#style-y035)]
 
@@ -440,44 +421,6 @@ controllerAs can also be used in the router like so:
 
 **[Back to top](#table-of-contents)**
 
-## Services
-
-### Singletons
-###### [Style [Y040](#style-y040)]
-
-  - Services are instantiated with the `new` keyword, use `this` for public methods and variables. Since these are so similar to factories, use a factory instead for consistency.
-
-    Note: [All Angular services are singletons](https://docs.angularjs.org/guide/services). This means that there is only one instance of a given service per injector.
-
-  ```javascript
-  // service
-  angular
-      .module('app')
-      .service('logger', logger);
-
-  function logger() {
-    this.logError = function(msg) {
-      /* */
-    };
-  }
-  ```
-
-  ```javascript
-  // factory
-  angular
-      .module('app')
-      .factory('logger', logger);
-
-  function logger() {
-      return {
-          logError: function(msg) {
-            /* */
-          }
-     };
-  }
-  ```
-
-**[Back to top](#table-of-contents)**
 
 ## Factories
 
@@ -492,161 +435,6 @@ controllerAs can also be used in the router like so:
   - Factories are singletons and return an object that contains the members of the service.
 
     Note: [All Angular services are singletons](https://docs.angularjs.org/guide/services).
-
-### Accessible Members Up Top
-###### [Style [Y052](#style-y052)]
-
-  - Expose the callable members of the service (its interface) at the top, using a technique derived from the [Revealing Module Pattern](http://addyosmani.com/resources/essentialjsdesignpatterns/book/#revealingmodulepatternjavascript).
-
-    *Why?*: Placing the callable members at the top makes it easy to read and helps you instantly identify which members of the service can be called and must be unit tested (and/or mocked).
-
-    *Why?*: This is especially helpful when the file gets longer as it helps avoid the need to scroll to see what is exposed.
-
-    *Why?*: Setting functions as you go can be easy, but when those functions are more than 1 line of code they can reduce the readability and cause more scrolling. Defining the callable interface via the returned service moves the implementation details down, keeps the callable interface up top, and makes it easier to read.
-
-  ```javascript
-  /* avoid */
-  function dataService() {
-    let someValue = '';
-    function save() {
-      /* */
-    };
-    function validate() {
-      /* */
-    };
-
-    return {
-        save: save,
-        someValue: someValue,
-        validate: validate
-    };
-  }
-  ```
-
-  ```javascript
-  /* recommended */
-  function dataService() {
-      let someValue = '';
-      let service = {
-          save: save,
-          someValue: someValue,
-          validate: validate
-      };
-      return service;
-
-      ////////////
-
-      function save() {
-          /* */
-      };
-
-      function validate() {
-          /* */
-      };
-  }
-  ```
-
-  This way bindings are mirrored across the host object, primitive values cannot update alone using the revealing module pattern.
-
-    ![Factories Using "Above the Fold"](https://raw.githubusercontent.com/johnpapa/angular-styleguide/master/assets/above-the-fold-2.png)
-
-### Function Declarations to Hide Implementation Details
-###### [Style [Y053](#style-y053)]
-
-  - Use function declarations to hide implementation details. Keep your accessible members of the factory up top. Point those to function declarations that appears later in the file. For more details see [this post](http://www.johnpapa.net/angular-function-declarations-function-expressions-and-readable-code).
-
-    *Why?*: Placing accessible members at the top makes it easy to read and helps you instantly identify which functions of the factory you can access externally.
-
-    *Why?*: Placing the implementation details of a function later in the file moves that complexity out of view so you can see the important stuff up top.
-
-    *Why?*: Function declaration are hoisted so there are no concerns over using a function before it is defined (as there would be with function expressions).
-
-    *Why?*: You never have to worry with function declarations that moving `let a` before `let b` will break your code because `a` depends on `b`.
-
-    *Why?*: Order is critical with function expressions
-
-  ```javascript
-  /**
-   * avoid
-   * Using function expressions
-   */
-   function dataservice($http, $location, $q, exception, logger) {
-      let isPrimed = false;
-      let primePromise;
-
-      let getAvengers = function() {
-          // implementation details go here
-      };
-
-      let getAvengerCount = function() {
-          // implementation details go here
-      };
-
-      let getAvengersCast = function() {
-         // implementation details go here
-      };
-
-      let prime = function() {
-         // implementation details go here
-      };
-
-      let ready = function(nextPromises) {
-          // implementation details go here
-      };
-
-      let service = {
-          getAvengersCast: getAvengersCast,
-          getAvengerCount: getAvengerCount,
-          getAvengers: getAvengers,
-          ready: ready
-      };
-
-      return service;
-  }
-  ```
-
-  ```javascript
-  /**
-   * recommended
-   * Using function declarations
-   * and accessible members up top.
-   */
-  function dataservice($http, $location, $q, exception, logger) {
-      let isPrimed = false;
-      let primePromise;
-
-      let service = {
-          getAvengersCast: getAvengersCast,
-          getAvengerCount: getAvengerCount,
-          getAvengers: getAvengers,
-          ready: ready
-      };
-
-      return service;
-
-      ////////////
-
-      function getAvengers() {
-          // implementation details go here
-      }
-
-      function getAvengerCount() {
-          // implementation details go here
-      }
-
-      function getAvengersCast() {
-          // implementation details go here
-      }
-
-      function prime() {
-          // implementation details go here
-      }
-
-      function ready(nextPromises) {
-          // implementation details go here
-      }
-  }
-  ```
 
 **[Back to top](#table-of-contents)**
 
@@ -671,60 +459,24 @@ controllerAs can also be used in the router like so:
       .module('app.core')
       .factory('dataservice', dataservice);
 
-  dataservice.$inject = ['$http', 'logger'];
+  class dataservice { 
+    constructor($http, logger) {
+      this.$http = $http;
+      this.logger = logger;
+    }
+    getAvengers() {
+      return this.$http.get('/api/maa')
+        .then(getAvengersComplete)
+        .catch(getAvengersFailed);
 
-  function dataservice($http, logger) {
-      return {
-          getAvengers: getAvengers
-      };
-
-      function getAvengers() {
-          return $http.get('/api/maa')
-              .then(getAvengersComplete)
-              .catch(getAvengersFailed);
-
-          function getAvengersComplete(response) {
-              return response.data.results;
-          }
-
-          function getAvengersFailed(error) {
-              logger.error('XHR Failed for getAvengers.' + error.data);
-          }
-      }
-  }
-  ```
-
-    Note: The data service is called from consumers, such as a controller, hiding the implementation from the consumers, as shown below.
-
-  ```javascript
-  /* recommended */
-
-  // controller calling the dataservice factory
-  angular
-      .module('app.avengers')
-      .controller('Avengers', Avengers);
-
-  Avengers.$inject = ['dataservice', 'logger'];
-
-  function Avengers(dataservice, logger) {
-      let vm = this;
-      vm.avengers = [];
-
-      activate();
-
-      function activate() {
-          return getAvengers().then(function() {
-              logger.info('Activated Avengers View');
-          });
+      getAvengersComplete(response) => {
+        return response.data.results;
       }
 
-      function getAvengers() {
-          return dataservice.getAvengers()
-              .then(function(data) {
-                  vm.avengers = data;
-                  return vm.avengers;
-              });
+      getAvengersFailed(error) => {
+        this.logger.error('XHR Failed for getAvengers.' + error.data);
       }
+    }
   }
   ```
 
@@ -738,9 +490,7 @@ controllerAs can also be used in the router like so:
   ```javascript
   /* recommended */
 
-  activate();
-
-  function activate() {
+  activate() {
       /**
        * Step 1
        * Ask the getAvengers function for the
@@ -755,7 +505,7 @@ controllerAs can also be used in the router like so:
       });
   }
 
-  function getAvengers() {
+  getAvengers() {
         /**
          * Step 2
          * Ask the data service for the data and wait
@@ -791,18 +541,6 @@ controllerAs can also be used in the router like so:
   /* avoid */
   /* directives.js */
 
-  angular
-      .module('app.widgets')
-
-      /* order directive that is specific to the order module */
-      .directive('orderCalendarRange', orderCalendarRange)
-
-      /* sales directive that can be used anywhere across the sales app */
-      .directive('salesCustomerInfo', salesCustomerInfo)
-
-      /* spinner directive that can be used anywhere across apps */
-      .directive('sharedSpinner', sharedSpinner);
-
   class orderCalendarRange {
       /* implementation details */
   }
@@ -818,12 +556,6 @@ controllerAs can also be used in the router like so:
 
   ```javascript
   /* recommended */
-  
-  /* index.modules.js */
-  
-  angular
-      .module('sales.order')
-      .directive('acmeOrderCalendarRange', orderCalendarRange);
       
   /* calendarRange.directive.js */
 
@@ -840,12 +572,6 @@ controllerAs can also be used in the router like so:
   ```javascript
   /* recommended */
   
-  /* index.modules.js */
-  
-    angular
-      .module('sales.widgets')
-      .directive('acmeSalesCustomerInfo', salesCustomerInfo);
-  
   /* customerInfo.directive.js */
 
   /**
@@ -860,12 +586,6 @@ controllerAs can also be used in the router like so:
 
   ```javascript
   /* recommended */
-  
-  /* index.modules.js */
-  
-   angular
-      .module('shared.widgets')
-      .directive('acmeSharedSpinner', sharedSpinner);
   
   /* spinner.directive.js */
 
@@ -915,9 +635,6 @@ controllerAs can also be used in the router like so:
 
   ```javascript
   /* avoid */
-  angular
-      .module('app.widgets')
-      .directive('myCalendarRange', myCalendarRange);
 
   class myCalendarRange { 
     constructor() {
@@ -939,9 +656,6 @@ controllerAs can also be used in the router like so:
 
   ```javascript
   /* recommended */
-  angular
-      .module('app.widgets')
-      .directive('myCalendarRange', myCalendarRange);
 
   class myCalendarRange { 
     constructor() {
@@ -973,36 +687,30 @@ controllerAs can also be used in the router like so:
   ```
 
   ```javascript
-  angular
-      .module('app')
-      .directive('myExample', myExample);
 
-  function myExample() {
-      let directive = {
-          restrict: 'EA',
-          templateUrl: 'app/feature/example.directive.html',
-          scope: {
-              max: '='
-          },
-          link: linkFunc,
-          controller: ExampleController,
-          controllerAs: 'vm',
-          bindToController: true // because the scope is isolated
+  class myExample {
+    constructor() {
+      this.restrict = 'EA';
+      this.templateUrl = 'app/feature/example.directive.html';
+      this.scope = {
+        max: '='
       };
-
-      return directive;
-
-      function linkFunc(scope, el, attr, ctrl) {
-          console.log('LINK: scope.min = %s *** should be undefined', scope.min);
-          console.log('LINK: scope.max = %s *** should be undefined', scope.max);
-          console.log('LINK: scope.vm.min = %s', scope.vm.min);
-          console.log('LINK: scope.vm.max = %s', scope.vm.max);
-      }
+      this.link = this.linkFunc,
+      this.controller = ExampleController;
+      this.controllerAs = 'vm';
+      this.bindToController = true; // because the scope is isolated
+    }
+    linkFunc(scope, el, attr, ctrl) {
+      console.log('LINK: scope.min = %s *** should be undefined', scope.min);
+      console.log('LINK: scope.max = %s *** should be undefined', scope.max);
+      console.log('LINK: scope.vm.min = %s', scope.vm.min);
+      console.log('LINK: scope.vm.max = %s', scope.vm.max);
+    }
   }
 
-  ExampleController.$inject = ['$scope'];
 
-  function ExampleController($scope) {
+  class ExampleController { 
+    constructor($scope) {
       // Injecting $scope just for comparison
       let vm = this;
 
@@ -1012,6 +720,7 @@ controllerAs can also be used in the router like so:
       console.log('CTRL: $scope.vm.max = %s', $scope.vm.max);
       console.log('CTRL: vm.min = %s', vm.min);
       console.log('CTRL: vm.max = %s', vm.max);
+    }
   }
   ```
 
@@ -1026,11 +735,11 @@ controllerAs can also be used in the router like so:
 
   ```javascript
   // Alternative to above example
-  function linkFunc(scope, el, attr, vm) {
-      console.log('LINK: scope.min = %s *** should be undefined', scope.min);
-      console.log('LINK: scope.max = %s *** should be undefined', scope.max);
-      console.log('LINK: vm.min = %s', vm.min);
-      console.log('LINK: vm.max = %s', vm.max);
+  linkFunc(scope, el, attr, vm) {
+    console.log('LINK: scope.min = %s *** should be undefined', scope.min);
+    console.log('LINK: scope.max = %s *** should be undefined', scope.max);
+    console.log('LINK: vm.min = %s', vm.min);
+    console.log('LINK: vm.max = %s', vm.max);
   }
   ```
 
@@ -1047,30 +756,28 @@ controllerAs can also be used in the router like so:
   ```
 
   ```javascript
-  angular
-      .module('app')
-      .directive('myExample', myExample);
 
-  function myExample() {
-      let directive = {
-          restrict: 'EA',
-          templateUrl: 'app/feature/example.directive.html',
-          scope: {
-              max: '='
-          },
-          controller: ExampleController,
-          controllerAs: 'vm',
-          bindToController: true
+  class myExample { 
+    constructor() { 
+      this.restrict = 'EA';
+      this.templateUrl = 'app/feature/example.directive.html';
+      this.scope = {
+        max: '='
       };
-
-      return directive;
+      this.link = this.linkFunc,
+      this.controller = ExampleController;
+      this.controllerAs = 'vm';
+      this.bindToController = true;
+    }
   }
 
-  function ExampleController() {
+  class ExampleController { 
+    constructor() {
       let vm = this;
       vm.min = 3;
       console.log('CTRL: vm.min = %s', vm.min);
       console.log('CTRL: vm.max = %s', vm.max);
+    }
   }
   ```
 
@@ -1704,7 +1411,7 @@ controllerAs can also be used in the router like so:
 ### Controller Names
 ###### [Style [Y123](#style-y123)]
 
-  - Use consistent names for all controllers named after their feature. Use UpperCamelCase for controllers, as they are constructors.
+  - Use consistent names for all controllers named after their feature. Use UpperCamelCase for controllers, as they are classes.
 
     *Why?*: Provides a consistent way to quickly identify and reference controllers.
 
@@ -1720,7 +1427,9 @@ controllerAs can also be used in the router like so:
         .module
         .controller('HeroAvengersController', HeroAvengersController);
 
-    function HeroAvengersController() { }
+    class HeroAvengersController{
+      constructor() { }
+    }
     ```
 
 ### Controller Name Suffix
@@ -1740,7 +1449,9 @@ controllerAs can also be used in the router like so:
         .module
         .controller('AvengersController', AvengersController);
 
-    function AvengersController() { }
+    class AvengersController{
+      constructor() { }
+    }
     ```
 
 ### Factory and Service Names
