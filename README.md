@@ -24,8 +24,7 @@ This is an ES6 fork of the Angular Style Guide by John Papa. It is intended for 
   1. [Testing](#testing)
   1. [Animations](#animations)
   1. [Comments](#comments)
-  1. [JSHint](#js-hint)
-  1. [JSCS](#jscs)
+  1. [ESLint](#eslint)
   1. [Constants](#constants)
   1. [File Templates and Snippets](#file-templates-and-snippets)
   1. [Yeoman Generator](#yeoman-generator)
@@ -1660,28 +1659,9 @@ Unit testing helps maintain clean code, as such I included some of my recommenda
 ### Code Analysis
 ###### [Style [Y195](#style-y195)]
 
-  - Run JSHint on your tests.
+  - Run ESLint on your tests.
 
-    *Why?*: Tests are code. JSHint can help identify code quality issues that may cause the test to work improperly.
-
-### Alleviate Globals for JSHint Rules on Tests
-###### [Style [Y196](#style-y196)]
-
-  - Relax the rules on your test code to allow for common globals such as `describe` and `expect`. Relax the rules for expressions, as Mocha uses these.
-
-    *Why?*: Your tests are code and require the same attention and code quality rules as all of your production code. However, global variables used by the testing framework, for example, can be relaxed by including this in your test specs.
-
-    ```javascript
-    /* jshint -W117, -W030 */
-    ```
-    Or you can add the following to your JSHint Options file.
-
-    ```javascript
-    "jasmine": true,
-    "mocha": true,
-    ```
-
-  ![Testing Tools](https://raw.githubusercontent.com/johnpapa/angular-styleguide/master/assets/testing-tools.png)
+    *Why?*: Tests are code. ESLint can help identify code quality issues that may cause the test to work improperly.
 
 ### Organizing Tests
 ###### [Style [Y197](#style-y197)]
@@ -1797,171 +1777,80 @@ Unit testing helps maintain clean code, as such I included some of my recommenda
 
 **[Back to top](#table-of-contents)**
 
-## JS Hint
+## ESLint
 
 ### Use an Options File
 ###### [Style [Y230](#style-y230)]
 
-  - Use JS Hint for linting your JavaScript and be sure to customize the JS Hint options file and include in source control. See the [JS Hint docs](http://www.jshint.com/docs/) for details on the options.
+  - Use ESLint for linting your JavaScript and be sure to customize the .eslintrc file and include in source control. See the [ESLint docs](http://eslint.org/docs/rules/) for details on the options.
 
     *Why?*: Provides a first alert prior to committing any code to source control.
 
     *Why?*: Provides consistency across your team.
+    
+    *Why?*: ESLint supports ES6.
 
     ```javascript
     {
-        "bitwise": true,
-        "camelcase": true,
-        "curly": true,
-        "eqeqeq": true,
-        "es3": false,
-        "forin": true,
-        "freeze": true,
-        "immed": true,
-        "indent": 4,
-        "latedef": "nofunc",
-        "newcap": true,
-        "noarg": true,
-        "noempty": true,
-        "nonbsp": true,
-        "nonew": true,
-        "plusplus": false,
-        "quotmark": "single",
-        "undef": true,
-        "unused": false,
-        "strict": false,
-        "maxparams": 10,
-        "maxdepth": 5,
-        "maxstatements": 40,
-        "maxcomplexity": 8,
-        "maxlen": 120,
+  "globals": {
+    "_": false,
+    "angular": false,
+    "console": false,
+    "inject": false,
+    "module": false,
+    "window": false
+  },
+  "parser": "babel-eslint",
+  "rules": {
+    "brace-style": [2, "stroustrup", {"allowSingleLine": false}],
+    "camelcase": 1,
+    "comma-dangle": [1, "never"],
+    "curly": 1,
+    "dot-notation": 1,
+    "eqeqeq": 1,
+    "indent": [1, 2],
+    "lines-around-comment": [2, {"allowBlockStart": true, "beforeBlockComment": true, "beforeLineComment": true}],
+    "new-parens": 1,
+    "no-bitwise": 1,
+    "no-cond-assign": 1,
+    "no-debugger": 1,
+    "no-dupe-args": 1,
+    "no-dupe-keys": 1,
+    "no-empty": 1,
+    "no-invalid-regexp": 1,
+    "no-invalid-this": 1,
+    "no-mixed-spaces-and-tabs": [1, "smart-tabs"],
+    "no-multiple-empty-lines": [1, {"max": 2}],
+    "no-undef": 1,
+    "no-underscore-dangle": 1,
+    "no-unreachable": 1,
+    "no-unused-vars": 1,
+    "one-var": [1, "never"],
+    "quote-props": [1, "as-needed"],
+    "semi": [1, "always"],
+    "space-after-keywords": [1, "always"],
+    "space-unary-ops": [1, {"words": true, "nonwords": false}],
+    "strict": [1, "function"],
+    "vars-on-top": 1,
+    "wrap-iife": [1, "outside"],
+    "yoda": [1, "never"],
 
-        "asi": false,
-        "boss": false,
-        "debug": false,
-        "eqnull": true,
-        "esnext": false,
-        "evil": false,
-        "expr": false,
-        "funcscope": false,
-        "globalstrict": false,
-        "iterator": false,
-        "lastsemic": false,
-        "laxbreak": false,
-        "laxcomma": false,
-        "loopfunc": true,
-        "maxerr": false,
-        "moz": false,
-        "multistr": false,
-        "notypeof": false,
-        "proto": false,
-        "scripturl": false,
-        "shadow": false,
-        "sub": true,
-        "supernew": false,
-        "validthis": false,
-        "noyield": false,
+    //ES6 Stuff
+    "arrow-parens": 1,
+    "arrow-spacing": 1,
+    "constructor-super": 1,
+    "no-class-assign": 1,
+    "no-const-assign": 1,
+    "no-dupe-class-members": 1,
+    "no-this-before-super": 1,
+    "no-var": 1,
+    "object-shorthand": 1,
+    "prefer-arrow-callback": 1,
+    "prefer-const": 1
+  }
+}
 
-        "browser": true,
-        "node": true,
-
-        "globals": {
-            "angular": false,
-            "$": false
-        }
-    }
     ```
-
-**[Back to top](#table-of-contents)**
-
-## JSCS
-
-### Use an Options File
-###### [Style [Y235](#style-y235)]
-
-  - Use JSCS for checking your coding styles your JavaScript and be sure to customize the JSCS options file and include in source control. See the [JSCS docs](http://www.jscs.info) for details on the options.
-
-    *Why?*: Provides a first alert prior to committing any code to source control.
-
-    *Why?*: Provides consistency across your team.
-
-    ```javascript
-    {
-        "excludeFiles": ["node_modules/**", "bower_components/**"],
-
-        "requireCurlyBraces": [
-            "if",
-            "else",
-            "for",
-            "while",
-            "do",
-            "try",
-            "catch"
-        ],
-        "requireOperatorBeforeLineBreak": true,
-        "requireCamelCaseOrUpperCaseIdentifiers": true,
-        "maximumLineLength": {
-          "value": 100,
-          "allowComments": true,
-          "allowRegex": true
-        },
-        "validateIndentation": 4,
-        "validateQuoteMarks": "'",
-
-        "disallowMultipleLineStrings": true,
-        "disallowMixedSpacesAndTabs": true,
-        "disallowTrailingWhitespace": true,
-        "disallowSpaceAfterPrefixUnaryOperators": true,
-        "disallowMultipleVarDecl": null,
-
-        "requireSpaceAfterKeywords": [
-          "if",
-          "else",
-          "for",
-          "while",
-          "do",
-          "switch",
-          "return",
-          "try",
-          "catch"
-        ],
-        "requireSpaceBeforeBinaryOperators": [
-            "=", "+=", "-=", "*=", "/=", "%=", "<<=", ">>=", ">>>=",
-            "&=", "|=", "^=", "+=",
-
-            "+", "-", "*", "/", "%", "<<", ">>", ">>>", "&",
-            "|", "^", "&&", "||", "===", "==", ">=",
-            "<=", "<", ">", "!=", "!=="
-        ],
-        "requireSpaceAfterBinaryOperators": true,
-        "requireSpacesInConditionalExpression": true,
-        "requireSpaceBeforeBlockStatements": true,
-        "requireLineFeedAtFileEnd": true,
-        "disallowSpacesInsideObjectBrackets": "all",
-        "disallowSpacesInsideArrayBrackets": "all",
-        "disallowSpacesInsideParentheses": true,
-
-        "jsDoc": {
-            "checkAnnotations": true,
-            "checkParamNames": true,
-            "requireParamTypes": true,
-            "checkReturnTypes": true,
-            "checkTypes": true
-        },
-
-        "disallowMultipleLineBreaks": true,
-
-        "disallowCommaBeforeLineBreak": null,
-        "disallowDanglingUnderscores": null,
-        "disallowEmptyBlocks": null,
-        "disallowTrailingComma": null,
-        "requireCommaBeforeLineBreak": null,
-        "requireDotNotation": null,
-        "requireMultipleVarDecl": null,
-        "requireParenthesesAroundIIFE": true
-    }
-    ```
-
 **[Back to top](#table-of-contents)**
 
 ## Constants
