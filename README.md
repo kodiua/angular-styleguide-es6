@@ -1,8 +1,6 @@
 # Angular Style Guide
 
-This is an ES6 fork of the Angular Style Guide by John Papa. It is intended for use with the generator-gulp-angular and Babel, and things that do not apply in that circumstance have been removed.
-
-*Opinionated Angular style guide for teams by [@john_papa](//twitter.com/john_papa)*
+This is an ES6 fork of the popular Angular Style Guide by John Papa. It is intended for use with the generator-gulp-angular and Babel, and things that do not apply in that circumstance have been removed.
 
 ## Table of Contents
 
