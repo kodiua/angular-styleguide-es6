@@ -1,6 +1,6 @@
 # Angular Style Guide
 
-This is an ES6 fork of the popular Angular Style Guide by John Papa. It is intended for use with the generator-gulp-angular and Babel, and things that do not apply in that circumstance have been removed.
+This is an ES2015/ES6 fork of the popular Angular Style Guide by John Papa. It is intended for use with the generator-gulp-angular and Babel, and things that do not apply in that circumstance have been removed.
 
 ## Table of Contents
 
@@ -2074,7 +2074,7 @@ _tldr; Use this guide. Attributions are appreciated._
 
 ### Copyright
 
-Copyright (c) 2014-2015 [John Papa](http://johnpapa.net)
+Copyright (c) 2014-2015 [John Papa](http://johnpapa.net) and 2015 Robert Wagner
 
 ### (The MIT License)
 Permission is hereby granted, free of charge, to any person obtaining
