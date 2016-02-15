@@ -760,7 +760,7 @@ controllerAs can also be used in the router like so:
       this.scope = {
         max: '='
       };
-      this.link = this.linkFunc,
+      this.link = this.linkFunc;
       this.controller = ExampleController;
       this.controllerAs = 'vm';
       this.bindToController = true;
