@@ -348,7 +348,6 @@ controllerAs can also be used in the router like so:
       return creditService.isOrderTotalOk(this.total)
         .then((isOk) => { this.isCreditOk = isOk; })
         .catch(showError);
-      };
     }
   }
   ```
