@@ -132,7 +132,7 @@ This is an ES2015/ES6 fork of the popular Angular Style Guide by John Papa. It i
 ### Getters
 ###### [Style [Y022](#style-y022)]
 
-  - When using a module, avoid using a variable and instead use chaining with the getter syntax.
+  - When using a module, avoid unnecessarily using variables and instead use chaining with the getter syntax.
 
   *Why?*: This produces more readable code and avoids variable collisions or leaks.
 
@@ -156,6 +156,8 @@ This is an ES2015/ES6 fork of the popular Angular Style Guide by John Papa. It i
     constructor() { }
   }
   ```
+
+
 
 ### Setting vs Getting
 ###### [Style [Y023](#style-y023)]
