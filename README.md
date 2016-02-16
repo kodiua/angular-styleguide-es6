@@ -157,8 +157,6 @@ This is an ES2015/ES6 fork of the popular Angular Style Guide by John Papa. It i
   }
   ```
 
-
-
 ### Setting vs Getting
 ###### [Style [Y023](#style-y023)]
 
