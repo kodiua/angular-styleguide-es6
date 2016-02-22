@@ -369,7 +369,7 @@ controllerAs can also be used in the router like so:
 
   - When a controller must be paired with a view and either component may be re-used by other controllers or views, define controllers along with their routes.
 
-    Note: If a View is loaded via another means besides a route, then use the `ng-controller="Avengers as vm"` syntax.
+    Note: If a View is loaded via another means besides a route, then use the `ng-controller="AvengersController as avengers"` syntax.
 
     *Why?*: Pairing the controller in the route allows different routes to invoke different pairs of controllers and views. When controllers are assigned in the view using [`ng-controller`](https://docs.angularjs.org/api/ng/directive/ngController), that view is always associated with the same controller.
 
@@ -391,7 +391,7 @@ controllerAs can also be used in the router like so:
 
   ```html
   <!-- avengers.html -->
-  <div ng-controller="Avengers as vm">
+  <div ng-controller="AvengersController as avengers">
   </div>
   ```
 
@@ -407,8 +407,8 @@ controllerAs can also be used in the router like so:
       $routeProvider
           .when('/avengers', {
               templateUrl: 'avengers.html',
-              controller: 'Avengers',
-              controllerAs: 'vm'
+              controller: 'AvengersController',
+              controllerAs: 'avengers'
           });
   }
   ```
@@ -683,8 +683,21 @@ controllerAs can also be used in the router like so:
   ```html
   <div my-example max="77"></div>
   ```
+  
+  ```js
+ //myExample.directive.js
+ class ExampleController { 
+    constructor($scope) {
+      // Injecting $scope just for comparison
+     
+      this.min = 3;
 
-  ```javascript
+      console.log('CTRL: $scope.example.min = %s', $scope.example.min);
+      console.log('CTRL: $scope.example.max = %s', $scope.example.max);
+      console.log('CTRL: this.min = %s', this.min);
+      console.log('CTRL: this.max = %s', this.max);
+    }
+  }
 
   class myExample {
     constructor() {
@@ -695,29 +708,14 @@ controllerAs can also be used in the router like so:
       };
       this.link = this.linkFunc;
       this.controller = ExampleController;
-      this.controllerAs = 'vm';
+      this.controllerAs = 'example';
       this.bindToController = true; // because the scope is isolated
     }
     linkFunc(scope, el, attr, ctrl) {
       console.log('LINK: scope.min = %s *** should be undefined', scope.min);
       console.log('LINK: scope.max = %s *** should be undefined', scope.max);
-      console.log('LINK: scope.vm.min = %s', scope.vm.min);
-      console.log('LINK: scope.vm.max = %s', scope.vm.max);
-    }
-  }
-
-
-  class ExampleController { 
-    constructor($scope) {
-      // Injecting $scope just for comparison
-      let vm = this;
-
-      vm.min = 3;
-
-      console.log('CTRL: $scope.vm.min = %s', $scope.vm.min);
-      console.log('CTRL: $scope.vm.max = %s', $scope.vm.max);
-      console.log('CTRL: vm.min = %s', vm.min);
-      console.log('CTRL: vm.max = %s', vm.max);
+      console.log('LINK: scope.example.min = %s', scope.example.min);
+      console.log('LINK: scope.example.max = %s', scope.example.max);
     }
   }
   ```
@@ -725,19 +723,19 @@ controllerAs can also be used in the router like so:
   ```html
   <!-- example.directive.html -->
   <div>hello world</div>
-  <div>max={{vm.max}}<input ng-model="vm.max"/></div>
-  <div>min={{vm.min}}<input ng-model="vm.min"/></div>
+  <div>max={{example.max}}<input ng-model="example.max"/></div>
+  <div>min={{example.min}}<input ng-model="example.min"/></div>
   ```
 
     Note: You can also name the controller when you inject it into the link function and access directive attributes as properties of the controller.
 
   ```javascript
   // Alternative to above example
-  linkFunc(scope, el, attr, vm) {
+  linkFunc(scope, el, attr, example) {
     console.log('LINK: scope.min = %s *** should be undefined', scope.min);
     console.log('LINK: scope.max = %s *** should be undefined', scope.max);
-    console.log('LINK: vm.min = %s', vm.min);
-    console.log('LINK: vm.max = %s', vm.max);
+    console.log('LINK: example.min = %s', example.min);
+    console.log('LINK: example.max = %s', example.max);
   }
   ```
 
@@ -754,6 +752,14 @@ controllerAs can also be used in the router like so:
   ```
 
   ```javascript
+  //myExample.directive.js
+   class ExampleController { 
+    constructor() {
+      this.min = 3;
+      console.log('CTRL: this.min = %s', this.min);
+      console.log('CTRL: this.max = %s', this.max);
+    }
+  }
 
   class myExample { 
     constructor() { 
@@ -764,17 +770,8 @@ controllerAs can also be used in the router like so:
       };
       this.link = this.linkFunc;
       this.controller = ExampleController;
-      this.controllerAs = 'vm';
+      this.controllerAs = 'example';
       this.bindToController = true;
-    }
-  }
-
-  class ExampleController { 
-    constructor() {
-      let vm = this;
-      vm.min = 3;
-      console.log('CTRL: vm.min = %s', vm.min);
-      console.log('CTRL: vm.max = %s', vm.max);
     }
   }
   ```
@@ -782,8 +779,8 @@ controllerAs can also be used in the router like so:
   ```html
   <!-- example.directive.html -->
   <div>hello world</div>
-  <div>max={{vm.max}}<input ng-model="vm.max"/></div>
-  <div>min={{vm.min}}<input ng-model="vm.min"/></div>
+  <div>max={{example.max}}<input ng-model="example.max"/></div>
+  <div>min={{example.min}}<input ng-model="example.min"/></div>
   ```
 
 **[Back to top](#table-of-contents)**
@@ -804,7 +801,7 @@ controllerAs can also be used in the router like so:
   ```javascript
   /* avoid */
   
-  class Avengers { 
+  class AvengersController { 
     constructor(movieService) {
       // unresolved
       this.movies;
@@ -825,8 +822,8 @@ controllerAs can also be used in the router like so:
     $routeProvider
       .when('/avengers', {
         templateUrl: 'avengers.html',
-        controller: 'Avengers',
-        controllerAs: 'vm',
+        controller: 'AvengersController',
+        controllerAs: 'avengers',
         resolve: {
           moviesPrepService: function(movieService) {
             return movieService.getMovies();
@@ -837,7 +834,7 @@ controllerAs can also be used in the router like so:
 
   // avengers.controller.js
 
-  class Avengers { 
+  class AvengersController { 
     constructor(moviesPrepService) {
       this.movies = moviesPrepService.movies;
     }
@@ -855,8 +852,8 @@ controllerAs can also be used in the router like so:
     $routeProvider
       .when('/avengers', {
         templateUrl: 'avengers.html',
-        controller: 'Avengers',
-        controllerAs: 'vm',
+        controller: 'AvengersController',
+        controllerAs: 'avengers',
         resolve: {
           moviesPrepService: moviesPrepService
         }
@@ -869,7 +866,7 @@ controllerAs can also be used in the router like so:
 
   // avengers.controller.js
  
-  class Avengers { 
+  class AvengersController { 
     constructor(moviesPrepService) {
       this.movies = moviesPrepService.movies;
     }
@@ -912,8 +909,8 @@ controllerAs can also be used in the router like so:
         $routeProvider
             .when('/avengers', {
                 templateUrl: 'avengers.html',
-                controller: 'Avengers',
-                controllerAs: 'vm',
+                controller: 'AvengersController',
+                controllerAs: 'avengers',
                 resolve: { /* @ngInject */
                     moviesPrepService: function(movieService) {
                         return movieService.getMovies();
