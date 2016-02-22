@@ -10,7 +10,7 @@ This is an ES2015/ES6 fork of the popular Angular Style Guide by John Papa. It i
   1. [Factories](#factories)
   1. [Data Services](#data-services)
   1. [Directives](#directives)
-  1. [Resolving Promises for a Controller](#resolving-promises-for-a-controller)
+  1. [Resolving Promises for a Controller](#route-resolve-promises)
   1. [Minification and Annotation](#minification-and-annotation)
   1. [Exception Handling](#exception-handling)
   1. [Naming](#naming)
