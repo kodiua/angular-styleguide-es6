@@ -42,20 +42,21 @@ This is an ES2015/ES6 fork of the popular Angular Style Guide by John Papa. It i
 
   The following example defines the `app` module and its dependencies, defines a controller, and defines a factory all in the same file.
 
-  ```javascript
+  ```js
   /* avoid */
-  angular
-      .module('app', ['ngRoute'])
-      .controller('SomeController', SomeController)
-      .factory('someFactory', someFactory);
 
-  class SomeController {
+ class SomeController {
     constructor() { }
   }
 
   class someFactory{
     constructor() { }
   }
+
+  angular
+      .module('app', ['ngRoute'])
+      .controller('SomeController', SomeController)
+      .factory('someFactory', someFactory);
   ```
 
   The same components are now separated into their own files.
