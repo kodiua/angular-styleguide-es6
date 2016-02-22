@@ -61,10 +61,13 @@ This is an ES2015/ES6 fork of the popular Angular Style Guide by John Papa. It i
 
   The same components are now separated into their own files.
 
-  ```javascript
+  ```js
   /* recommended */
 
   // app.module.js
+  import { SomeController } from './some.controller';
+  import { someFactory } from './some.factory';
+  
   angular
       .module('app', ['ngRoute'])
       .controller('SomeController', SomeController)
@@ -74,7 +77,7 @@ This is an ES2015/ES6 fork of the popular Angular Style Guide by John Papa. It i
   ```javascript
   /* recommended */
 
-  // someController.js
+  // some.controller.js
   class SomeController{
     constructor() { }
   }
@@ -83,7 +86,7 @@ This is an ES2015/ES6 fork of the popular Angular Style Guide by John Papa. It i
   ```javascript
   /* recommended */
 
-  // someFactory.js
+  // some.factory.js
   class someFactory{
     constructor() { }
   }
