@@ -2,6 +2,9 @@
 
 This is an ES2015/ES6 fork of the popular Angular Style Guide by John Papa. It is intended for use with the generator-gulp-angular and Babel, and things that do not apply in that circumstance have been removed.
 
+Please be advised that all examples will not be copy/paste working examples. In instances where classes are imported,
+it is expected that the imported class was defined correctly, in another file, and imported in.
+
 ## Table of Contents
 
   1. [Single Responsibility](#single-responsibility)
@@ -10,7 +13,7 @@ This is an ES2015/ES6 fork of the popular Angular Style Guide by John Papa. It i
   1. [Factories](#factories)
   1. [Data Services](#data-services)
   1. [Directives](#directives)
-  1. [Resolving Promises for a Controller](#resolving-promises-for-a-controller)
+  1. [Resolving Promises](#route-resolve-promises)
   1. [Minification and Annotation](#minification-and-annotation)
   1. [Exception Handling](#exception-handling)
   1. [Naming](#naming)
@@ -61,10 +64,13 @@ This is an ES2015/ES6 fork of the popular Angular Style Guide by John Papa. It i
 
   The same components are now separated into their own files.
 
-  ```javascript
+  ```js
   /* recommended */
 
   // app.module.js
+  import { SomeController } from './some.controller';
+  import { someFactory } from './some.factory';
+  
   angular
       .module('app', ['ngRoute'])
       .controller('SomeController', SomeController)
@@ -74,7 +80,7 @@ This is an ES2015/ES6 fork of the popular Angular Style Guide by John Papa. It i
   ```javascript
   /* recommended */
 
-  // someController.js
+  // some.controller.js
   class SomeController{
     constructor() { }
   }
@@ -83,7 +89,7 @@ This is an ES2015/ES6 fork of the popular Angular Style Guide by John Papa. It i
   ```javascript
   /* recommended */
 
-  // someFactory.js
+  // some.factory.js
   class someFactory{
     constructor() { }
   }
@@ -109,7 +115,7 @@ This is an ES2015/ES6 fork of the popular Angular Style Guide by John Papa. It i
 
   ```javascript
   /* avoid */
-  let app = angular.module('app', [
+  const app = angular.module('app', [
       'ngAnimate',
       'ngRoute',
       'app.shared',
@@ -139,23 +145,19 @@ This is an ES2015/ES6 fork of the popular Angular Style Guide by John Papa. It i
 
   ```javascript
   /* avoid */
-  let app = angular.module('app');
+  import { SomeController } from './some.controller';
+  
+  const app = angular.module('app');
   app.controller('SomeController', SomeController);
-
-  class SomeController {
-    constructor() { }
-  }
   ```
 
   ```javascript
   /* recommended */
+  import { SomeController } from './some.controller';
+  
   angular
       .module('app')
       .controller('SomeController', SomeController);
-
-  class SomeController {
-    constructor() { }
-  }
   ```
 
 ### Setting vs Getting
@@ -191,17 +193,19 @@ This is an ES2015/ES6 fork of the popular Angular Style Guide by John Papa. It i
 
   ```javascript
   /* recommended */
-
-  // index.module.js
-  angular
-      .module('app')
-      .controller('Dashboard', Dashboard);
-      
-  // dashboard.js
+  
+  // dashboard.controller.js
 
   class Dashboard {
     constructor() { }
   }
+
+  // index.module.js
+  import { Dashboard } from './dashboard.controller';
+  
+  angular
+      .module('app')
+      .controller('Dashboard', Dashboard);
   ```
 
 **[Back to top](#table-of-contents)**
