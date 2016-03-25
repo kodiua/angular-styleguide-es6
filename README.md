@@ -1,6 +1,6 @@
-# Angular Style Guide
+# Angular Style Guide ES2015/ES6
 
-This is an ES2015/ES6 fork of the popular Angular Style Guide by John Papa. It is intended for use with the generator-gulp-angular and Babel, and things that do not apply in that circumstance have been removed.
+This is an ES2015/ES6 fork of the popular Angular 1.x Style Guide by John Papa. It is intended for use with the generator-gulp-angular and Babel, and things that do not apply in that circumstance have been removed.
 
 Please be advised that all examples will not be copy/paste working examples. In instances where classes are imported,
 it is expected that the imported class was defined correctly, in another file, and imported in.
