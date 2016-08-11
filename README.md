@@ -2,7 +2,7 @@
 
 This is an ES2015/ES6 fork of the popular Angular 1.x Style Guide by John Papa. It was originally written for use with generator-gulp-angular and Babel, and things that do not apply in that circumstance have been removed.
 
-**Note:** generator-gulp-angular has been deprecated, but the people working on it are now working on FountainJS, which I highly recommend as a starting point. Just make sure to choose Angular 1.x and Babel to stay in line with this guide.
+**Note:** generator-gulp-angular has been deprecated, but the people working on it are now working on [FountainJS](http://fountainjs.io/), which I highly recommend as a starting point. Just make sure to choose Angular 1.x and Babel to stay in line with this guide.
 
 Please be advised that all examples will not be copy/paste working examples. In instances where classes are imported,
 it is expected that the imported class was defined correctly, in another file, and imported in.
