@@ -1408,7 +1408,7 @@ angular.module('app')
     app/
         app.module.js
         app.config.js
-        components/
+        componenets/
             compliment/
               compliment.component.js
               compliment.template.html
