@@ -882,7 +882,9 @@ controllerAs can also be used in the router like so:
 
 A Component module is the container reference for all reusable components. The entities required are decoupled from all other entities and thus can be moved into any other application with ease. As with other entites, keeping the template and controller in separate files reduces component clutter.
 
-When creating components, a configuration object is supplied as opposed to a function used by directive modules.
+When creating components, a configuration object is supplied as opposed to a function used by directive modules.  
+
+Further, using the `bindings` property is the prefered method as `scope` which is used in directives. All bindings assume isolate scope.
 
 
 ```javascript
@@ -890,7 +892,7 @@ When creating components, a configuration object is supplied as opposed to a fun
 
 const compliment = {
   bindings: {
-    userName: '@',
+    userName: '=',
     compliment: '@',
   },
   template: '<div class=\"compliment\"><h2>Hello {{$ctrl.userName}} you look {{$ctrl.compliment}}!</h2></div>',
@@ -911,7 +913,7 @@ import template    from './compliment.template.html'
 
 const compliment = {
   bindings: {
-    userName: '@',
+    userName: '=',
     compliment: '@',
   },
   template,    // template and controller using ES6 shorthand
@@ -1102,7 +1104,7 @@ angular.module('app')
 ### Feature File Names
 ###### [Style [Y121](#style-y121)]
 
-  - Use consistent names for all entities following a pattern that describes the entity feature then (optionally) its type. My recommended pattern is `feature.type.js`.
+  - Use consistent names for all entities following a pattern that describes the entities feature then (optionally) its type. My recommended pattern is `feature.type.js`.
 
     *Why?*: Provides a consistent way to quickly identify individual entities.
 
