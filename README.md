@@ -1104,7 +1104,7 @@ angular.module('app')
 ### Feature File Names
 ###### [Style [Y121](#style-y121)]
 
-  - Use consistent names for all entities following a pattern that describes the entities feature then (optionally) its type. My recommended pattern is `feature.type.js`.
+  - Use consistent names for all entities following a pattern that describes the entity's feature then (optionally) its type. My recommended pattern is `feature.type.js`.
 
     *Why?*: Provides a consistent way to quickly identify individual entities.
 
