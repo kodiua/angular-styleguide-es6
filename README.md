@@ -65,7 +65,7 @@ it is expected that the imported class was defined correctly, in another file, a
       .factory('someFactory', someFactory);
   ```
 
-  The same parts are now separated into their own files.
+  The same entities are now separated into their own files.
 
   ```js
   /* recommended */
@@ -114,7 +114,7 @@ it is expected that the imported class was defined correctly, in another file, a
 
   - Declare modules without a variable using the setter syntax.
 
-  *Why?*: With 1 part per file, there is rarely a need to introduce a variable for the module.
+  *Why?*: With 1 entity per file, there is rarely a need to introduce a variable for the module.
 
   ```javascript
   /* avoid */
@@ -370,7 +370,7 @@ controllerAs can also be used in the router like so:
 ### Assigning Controllers
 ###### [Style [Y038](#style-y038)]
 
-  - When a controller must be paired with a view and either part may be re-used by other controllers or views, define controllers along with their routes.
+  - When a controller must be paired with a view and either entity may be re-used by other controllers or views, define controllers along with their routes.
 
     Note: If a View is loaded via another means besides a route, then use the `ng-controller="AvengersController as avengers"` syntax.
 
@@ -880,7 +880,7 @@ controllerAs can also be used in the router like so:
 
 ## Components
 
-A Component module is the container reference for all reusable components. The parts required are decoupled from all other parts and thus can be moved into any other application with ease. As with other parts, keeping the template and controller in separate files reduces component clutter.
+A Component module is the container reference for all reusable components. The entities required are decoupled from all other entities and thus can be moved into any other application with ease. As with other entites, keeping the template and controller in separate files reduces component clutter.
 
 When creating components, a configuration object is supplied as opposed to a function used by directive modules.
 
@@ -1091,9 +1091,9 @@ angular.module('app')
 ### Naming Guidelines
 ###### [Style [Y120](#style-y120)]
 
-  - Use consistent names for all parts following a pattern that describes the parts feature then (optionally) its type. My recommended pattern is `feature.type.js`. There are 2 names for most assets:
+  - Use consistent names for all entites following a pattern that describes the entities feature then (optionally) its type. My recommended pattern is `feature.type.js`. There are 2 names for most assets:
     * the file name (`avengers.controller.js`)
-    * the registered part name with Angular (`AvengersController`)
+    * the registered entity name with Angular (`AvengersController`)
 
     *Why?*: Naming conventions help provide a consistent way to find content at a glance. Consistency within the project is vital. Consistency with a team is important. Consistency across a company provides tremendous efficiency.
 
@@ -1102,9 +1102,9 @@ angular.module('app')
 ### Feature File Names
 ###### [Style [Y121](#style-y121)]
 
-  - Use consistent names for all parts following a pattern that describes the parts feature then (optionally) its type. My recommended pattern is `feature.type.js`.
+  - Use consistent names for all entities following a pattern that describes the entity feature then (optionally) its type. My recommended pattern is `feature.type.js`.
 
-    *Why?*: Provides a consistent way to quickly identify individula parts.
+    *Why?*: Provides a consistent way to quickly identify individual entities.
 
     *Why?*: Provides pattern matching for any automated tasks.
 
@@ -1155,7 +1155,7 @@ angular.module('app')
     avenger-profile.directive.spec.js
     ```
 
-  Note: Another common convention is naming controller files without the word `controller` in the file name such as `avengers.js` instead of `avengers.controller.js`. All other conventions still hold using a suffix of the type. Controllers are the most common type of parts so this just saves typing and is still easily identifiable. I recommend you choose 1 convention and be consistent for your team. My preference is `avengers.controller.js`.
+  Note: Another common convention is naming controller files without the word `controller` in the file name such as `avengers.js` instead of `avengers.controller.js`. All other conventions still hold using a suffix of the type. Controllers are the most common type of entities so this just saves typing and is still easily identifiable. I recommend you choose 1 convention and be consistent for your team. My preference is `avengers.controller.js`.
 
     ```javascript
     /**
@@ -1359,7 +1359,7 @@ angular.module('app')
 
   - When you look at a file you should instantly know what it contains and represents.
 
-    *Why?*: You spend less time hunting and pecking for code, and become more efficient. If this means you want longer file names, then so be it. Be descriptive with file names and keeping the contents of the file to exactly 1 part. Avoid files with multiple controllers, multiple services, or a mixture. There are deviations of the 1 per file rule when I have a set of very small features that are all related to each other, they are still easily identifiable.
+    *Why?*: You spend less time hunting and pecking for code, and become more efficient. If this means you want longer file names, then so be it. Be descriptive with file names and keeping the contents of the file to exactly 1 entity. Avoid files with multiple controllers, multiple services, or a mixture. There are deviations of the 1 per file rule when I have a set of very small features that are all related to each other, they are still easily identifiable.
 
 ### Flat
 ###### [Style [Y143](#style-y143)]
