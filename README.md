@@ -13,6 +13,7 @@ it is expected that the imported class was defined correctly, in another file, a
   1. [Factories](#factories)
   1. [Data Services](#data-services)
   1. [Directives](#directives)
+  1. [Components](#components)
   1. [Resolving Promises](#route-resolve-promises)
   1. [Minification and Annotation](#minification-and-annotation)
   1. [Exception Handling](#exception-handling)
@@ -41,7 +42,7 @@ it is expected that the imported class was defined correctly, in another file, a
 ### Rule of 1
 ###### [Style [Y001](#style-y001)]
 
-  - Define 1 component per file.
+  - Define 1 directive per file.
 
   The following example defines the `app` module and its dependencies, defines a controller, and defines a factory all in the same file.
 
@@ -62,28 +63,13 @@ it is expected that the imported class was defined correctly, in another file, a
       .factory('someFactory', someFactory);
   ```
 
-  The same components are now separated into their own files.
+  The same directives are now separated into their own files.
 
-  ```js
-  /* recommended */
-
-  // app.module.js
-  import { SomeController } from './some.controller';
-  import { someFactory } from './some.factory';
-  
-  angular
-      .module('app', ['ngRoute'])
-      .controller('SomeController', SomeController)
-      .factory('someFactory', someFactory);
-  ```
 
   ```javascript
   /* recommended */
 
-  // some.controller.js
-  class SomeController{
-    constructor() { }
-  }
+
   ```
 
   ```javascript
@@ -111,7 +97,7 @@ it is expected that the imported class was defined correctly, in another file, a
 
   - Declare modules without a variable using the setter syntax.
 
-  *Why?*: With 1 component per file, there is rarely a need to introduce a variable for the module.
+  *Why?*: With 1 directive per file, there is rarely a need to introduce a variable for the module.
 
   ```javascript
   /* avoid */
@@ -146,7 +132,7 @@ it is expected that the imported class was defined correctly, in another file, a
   ```javascript
   /* avoid */
   import { SomeController } from './some.controller';
-  
+
   const app = angular.module('app');
   app.controller('SomeController', SomeController);
   ```
@@ -154,7 +140,7 @@ it is expected that the imported class was defined correctly, in another file, a
   ```javascript
   /* recommended */
   import { SomeController } from './some.controller';
-  
+
   angular
       .module('app')
       .controller('SomeController', SomeController);
@@ -193,7 +179,7 @@ it is expected that the imported class was defined correctly, in another file, a
 
   ```javascript
   /* recommended */
-  
+
   // dashboard.controller.js
 
   class Dashboard {
@@ -202,7 +188,7 @@ it is expected that the imported class was defined correctly, in another file, a
 
   // index.module.js
   import { Dashboard } from './dashboard.controller';
-  
+
   angular
       .module('app')
       .controller('Dashboard', Dashboard);
@@ -236,7 +222,7 @@ it is expected that the imported class was defined correctly, in another file, a
       {{customer.name}}
   </div>
   ```
-  
+
 controllerAs can also be used in the router like so:
 
 ```js
@@ -260,7 +246,7 @@ controllerAs can also be used in the router like so:
 
   ```javascript
   /* avoid */
-  class Customer { 
+  class Customer {
     constructor($scope) {
       $scope.name = {};
       $scope.sendMessage = function() { };
@@ -344,7 +330,7 @@ controllerAs can also be used in the router like so:
 
   ```javascript
   /* recommended */
-  class Order { 
+  class Order {
     constructor (creditService) {
       this.isCreditOk;
       this.total = 0;
@@ -367,7 +353,7 @@ controllerAs can also be used in the router like so:
 ### Assigning Controllers
 ###### [Style [Y038](#style-y038)]
 
-  - When a controller must be paired with a view and either component may be re-used by other controllers or views, define controllers along with their routes.
+  - When a controller must be paired with a view and either directive may be re-used by other controllers or views, define controllers along with their routes.
 
     Note: If a View is loaded via another means besides a route, then use the `ng-controller="AvengersController as avengers"` syntax.
 
@@ -459,7 +445,7 @@ controllerAs can also be used in the router like so:
       .module('app.core')
       .factory('dataservice', dataservice);
 
-  class dataservice { 
+  class dataservice {
     constructor($http, logger) {
       this.$http = $http;
       this.logger = logger;
@@ -556,14 +542,14 @@ controllerAs can also be used in the router like so:
 
   ```javascript
   /* recommended */
-      
+
   /* calendarRange.directive.js */
 
   /**
    * @desc order directive that is specific to the order module at a company named Acme
    * @example <div acme-order-calendar-range></div>
    */
- 
+
   class orderCalendarRange {
       /* implementation details */
   }
@@ -571,7 +557,7 @@ controllerAs can also be used in the router like so:
 
   ```javascript
   /* recommended */
-  
+
   /* customerInfo.directive.js */
 
   /**
@@ -586,14 +572,14 @@ controllerAs can also be used in the router like so:
 
   ```javascript
   /* recommended */
-  
+
   /* spinner.directive.js */
 
   /**
    * @desc spinner directive that can be used anywhere across apps at a company named Acme
    * @example <div acme-shared-spinner></div>
    */
- 
+
   class sharedSpinner {
       /* implementation details */
   }
@@ -636,7 +622,7 @@ controllerAs can also be used in the router like so:
   ```javascript
   /* avoid */
 
-  class myCalendarRange { 
+  class myCalendarRange {
     constructor() {
       this.link = this.linkFunc;
       this.templateUrl = '/template/is/located/here.html';
@@ -657,7 +643,7 @@ controllerAs can also be used in the router like so:
   ```javascript
   /* recommended */
 
-  class myCalendarRange { 
+  class myCalendarRange {
     constructor() {
       this.link = this.linkFunc;
       this.templateUrl = '/template/is/located/here.html';
@@ -683,13 +669,13 @@ controllerAs can also be used in the router like so:
   ```html
   <div my-example max="77"></div>
   ```
-  
+
   ```js
  //myExample.directive.js
- class ExampleController { 
+ class ExampleController {
     constructor($scope) {
       // Injecting $scope just for comparison
-     
+
       this.min = 3;
 
       console.log('CTRL: $scope.example.min = %s', $scope.example.min);
@@ -753,7 +739,7 @@ controllerAs can also be used in the router like so:
 
   ```javascript
   //myExample.directive.js
-   class ExampleController { 
+   class ExampleController {
     constructor() {
       this.min = 3;
       console.log('CTRL: this.min = %s', this.min);
@@ -761,8 +747,8 @@ controllerAs can also be used in the router like so:
     }
   }
 
-  class myExample { 
-    constructor() { 
+  class myExample {
+    constructor() {
       this.restrict = 'EA';
       this.templateUrl = 'app/feature/example.directive.html';
       this.scope = {
@@ -800,8 +786,8 @@ controllerAs can also be used in the router like so:
 
   ```javascript
   /* avoid */
-  
-  class AvengersController { 
+
+  class AvengersController {
     constructor(movieService) {
       // unresolved
       this.movies;
@@ -817,7 +803,7 @@ controllerAs can also be used in the router like so:
   /* better */
 
   // route-config.js
- 
+
   function config($routeProvider) {
     $routeProvider
       .when('/avengers', {
@@ -834,7 +820,7 @@ controllerAs can also be used in the router like so:
 
   // avengers.controller.js
 
-  class AvengersController { 
+  class AvengersController {
     constructor(moviesPrepService) {
       this.movies = moviesPrepService.movies;
     }
@@ -865,13 +851,61 @@ controllerAs can also be used in the router like so:
   }
 
   // avengers.controller.js
- 
-  class AvengersController { 
+
+  class AvengersController {
     constructor(moviesPrepService) {
       this.movies = moviesPrepService.movies;
     }
   }
   ```
+
+**[Back to top](#table-of-contents)**
+
+## Components
+
+A Component module is the container reference for all reusable components. The modules required are decoupled from all other modules and thus can be moved into any other application with ease. As with other modules, keeping the template and controller in separate files reduces component clutter.
+
+When creating components, a configuration object is supplied as opposed to a function used by directive modules.
+
+
+```javascript
+/* avoid */
+
+const Compliment = {
+  bindings: {
+    userName: '@',
+    compliment: '@',
+  },
+  template: '<div class=\"compliment\"><h2>Hello {{$ctrl.userName}} you look {{$ctrl.compliment}}!</h2></div>',
+  controller: function () {/*controller*/}
+}
+
+angular.module('app')
+  .component('compliment', Compliment);
+
+```
+
+```javascript
+/* recommended */
+
+// import template and controller from component directory
+
+import controller  from './compliment.controller'
+import template    from './compliment.template.html'
+
+const Compliment = {
+  bindings: {
+    userName: '@',
+    compliment: '@',
+  },
+  template,    // template and controller using ES6 shorthand
+  controller   
+}
+
+angular.module('app')
+  .component('compliment', Compliment);
+
+```
 
 **[Back to top](#table-of-contents)**
 
@@ -885,12 +919,12 @@ controllerAs can also be used in the router like so:
     *Why?*: This safeguards your code from any dependencies that may not be using minification-safe practices.
 
     ```javascript
-    class Avengers { 
+    class Avengers {
       constructor(storage, avengerService) {
         'ngInject';
-      
+
         this.heroSearch = '';
-        
+
         this.avengerService = avengerService;
         this.storage = storage;
       }
@@ -1041,9 +1075,9 @@ controllerAs can also be used in the router like so:
 ### Naming Guidelines
 ###### [Style [Y120](#style-y120)]
 
-  - Use consistent names for all components following a pattern that describes the component's feature then (optionally) its type. My recommended pattern is `feature.type.js`. There are 2 names for most assets:
+  - Use consistent names for all modules following a pattern that describes the feature then (optionally) its type. My recommended pattern is `feature.type.js`. There are 2 names for most assets:
     * the file name (`avengers.controller.js`)
-    * the registered component name with Angular (`AvengersController`)
+    * the registered directive name with Angular (`AvengersController`)
 
     *Why?*: Naming conventions help provide a consistent way to find content at a glance. Consistency within the project is vital. Consistency with a team is important. Consistency across a company provides tremendous efficiency.
 
@@ -1052,9 +1086,9 @@ controllerAs can also be used in the router like so:
 ### Feature File Names
 ###### [Style [Y121](#style-y121)]
 
-  - Use consistent names for all components following a pattern that describes the component's feature then (optionally) its type. My recommended pattern is `feature.type.js`.
+  - Use consistent names for all modules following a pattern that describes the feature then (optionally) its type. My recommended pattern is `feature.type.js`.
 
-    *Why?*: Provides a consistent way to quickly identify components.
+    *Why?*: Provides a consistent way to quickly identify modules.
 
     *Why?*: Provides pattern matching for any automated tasks.
 
@@ -1105,7 +1139,7 @@ controllerAs can also be used in the router like so:
     avenger-profile.directive.spec.js
     ```
 
-  Note: Another common convention is naming controller files without the word `controller` in the file name such as `avengers.js` instead of `avengers.controller.js`. All other conventions still hold using a suffix of the type. Controllers are the most common type of component so this just saves typing and is still easily identifiable. I recommend you choose 1 convention and be consistent for your team. My preference is `avengers.controller.js`.
+  Note: Another common convention is naming controller files without the word `controller` in the file name such as `avengers.js` instead of `avengers.controller.js`. All other conventions still hold using a suffix of the type. Controllers are the most common type of module so this just saves typing and is still easily identifiable. I recommend you choose 1 convention and be consistent for your team. My preference is `avengers.controller.js`.
 
     ```javascript
     /**
@@ -1119,9 +1153,9 @@ controllerAs can also be used in the router like so:
 ### Test File Names
 ###### [Style [Y122](#style-y122)]
 
-  - Name test specifications similar to the component they test with a suffix of `spec`.
+  - Name test specifications similar to the module they test with a suffix of `spec`.
 
-    *Why?*: Provides a consistent way to quickly identify components.
+    *Why?*: Provides a consistent way to quickly identify modules.
 
     *Why?*: Provides pattern matching for [karma](http://karma-runner.github.io/) or other test runners.
 
@@ -1195,7 +1229,7 @@ controllerAs can also be used in the router like so:
 
     // logger.service.js
 
-    class logger { 
+    class logger {
       constructor() { }
     }
     ```
@@ -1207,23 +1241,23 @@ controllerAs can also be used in the router like so:
 
     // credit.service.js
 
-    class creditService { 
+    class creditService {
       constructor() { }
     }
 
     // customer.service.js
 
-    class customersService { 
+    class customersService {
       constructor() { }
     }
     ```
 
-### Directive Component Names
+### Directive Names
 ###### [Style [Y126](#style-y126)]
 
   - Use consistent names for all directives using camel-case. Use a short prefix to describe the area that the directives belong (some example are company prefix or project prefix).
 
-    *Why?*: Provides a consistent way to quickly identify and reference components.
+    *Why?*: Provides a consistent way to quickly identify and reference modules.
 
     ```javascript
     /**
@@ -1253,7 +1287,7 @@ controllerAs can also be used in the router like so:
 
   - Separate configuration for a module into its own file named after the module. A configuration file for the main `app` module is named `app.config.js` (or simply `config.js`). A configuration for a module named `admin.module.js` is named `admin.config.js`.
 
-    *Why?*: Separates configuration from module definition, components, and active code.
+    *Why?*: Separates configuration from module definition, and active code.
 
     *Why?*: Provides an identifiable place to set configuration for a module.
 
@@ -1309,7 +1343,7 @@ controllerAs can also be used in the router like so:
 
   - When you look at a file you should instantly know what it contains and represents.
 
-    *Why?*: You spend less time hunting and pecking for code, and become more efficient. If this means you want longer file names, then so be it. Be descriptive with file names and keeping the contents of the file to exactly 1 component. Avoid files with multiple controllers, multiple services, or a mixture. There are deviations of the 1 per file rule when I have a set of very small features that are all related to each other, they are still easily identifiable.
+    *Why?*: You spend less time hunting and pecking for code, and become more efficient. If this means you want longer file names, then so be it. Be descriptive with file names and keeping the contents of the file to exactly 1 module. Avoid files with multiple controllers, multiple services, or a mixture. There are deviations of the 1 per file rule when I have a set of very small features that are all related to each other, they are still easily identifiable.
 
 ### Flat
 ###### [Style [Y143](#style-y143)]
@@ -1358,19 +1392,30 @@ controllerAs can also be used in the router like so:
     app/
         app.module.js
         app.config.js
-        components/
-            calendar.directive.js
-            calendar.directive.html
-            user-profile.directive.js
-            user-profile.directive.html
+        compoments/
+            compliment/
+              Compliment.component.js
+              compliment.template.html
+              compliment.controller.js
+              compliment.spec.js
+        directives/
+            calendar/
+              calendar.directive.js
+              calendar.directive.html
+            user-profile/
+              user-profile.directive.js
+              user-profile.directive.html
         people/
-            attendees.html
-            attendees.controller.js
-            people.routes.js
-            speakers.html
-            speakers.controller.js
-            speaker-detail.html
-            speaker-detail.controller.js
+            attendees/
+              attendees.html
+              attendees.controller.js
+            people/  
+              people.routes.js
+            speakers/
+              speakers.html
+              speakers.controller.js
+              speaker-detail.html
+              speaker-detail.controller.js
         services/
             data.service.js
             localstorage.service.js
@@ -1663,9 +1708,9 @@ Unit testing helps maintain clean code, as such I included some of my recommenda
 ### Organizing Tests
 ###### [Style [Y197](#style-y197)]
 
-  - Place unit test files (specs) side-by-side with your client code. Place specs that cover server integration or test multiple components in a separate `tests` folder.
+  - Place unit test files (specs) side-by-side with your client code. Place specs that cover server integration or test multiple modules in a separate `tests` folder.
 
-    *Why?*: Unit tests have a direct correlation to a specific component and file in source code.
+    *Why?*: Unit tests have a direct correlation to a specific module and file in source code.
 
     *Why?*: It is easier to keep them up to date since they are always in sight. When coding whether you do TDD or test during development or test after development, the specs are side-by-side and never out of sight nor mind, and thus more likely to be maintained which also helps maintain code coverage.
 
@@ -1673,7 +1718,7 @@ Unit testing helps maintain clean code, as such I included some of my recommenda
 
     *Why?*: Placing them side-by-side makes it easy to find them and easy to move them with the source code if you move the source.
 
-    *Why?*: Having the spec nearby makes it easier for the source code reader to learn how the component is supposed to be used and to discover its known limitations.
+    *Why?*: Having the spec nearby makes it easier for the source code reader to learn how the module is supposed to be used and to discover its known limitations.
 
     *Why?*: Separating specs so they are not in a distributed build is easy with grunt or gulp.
 
@@ -1784,7 +1829,7 @@ Unit testing helps maintain clean code, as such I included some of my recommenda
     *Why?*: Provides a first alert prior to committing any code to source control.
 
     *Why?*: Provides consistency across your team.
-    
+
     *Why?*: ESLint supports ES6.
 
     ```javascript
@@ -1857,7 +1902,7 @@ Unit testing helps maintain clean code, as such I included some of my recommenda
 
   - Create an Angular Constant for vendor libraries' global variables.
 
-    *Why?*: Provides a way to inject vendor libraries that otherwise are globals. This improves code testability by allowing you to more easily know what the dependencies of your components are (avoids leaky abstractions). It also allows you to mock these dependencies, where it makes sense.
+    *Why?*: Provides a way to inject vendor libraries that otherwise are globals. This improves code testability by allowing you to more easily know what the dependencies of your modules are (avoids leaky abstractions). It also allows you to mock these dependencies, where it makes sense.
 
     ```javascript
     // constants.js
@@ -1879,7 +1924,7 @@ Unit testing helps maintain clean code, as such I included some of my recommenda
 
     *Why?*: A value that may change, even infrequently, should be retrieved from a service so you do not have to change the source code. For example, a url for a data service could be placed in a constants but a better place would be to load it from a web service.
 
-    *Why?*: Constants can be injected into any angular component, including providers.
+    *Why?*: Constants can be injected into any angular module, including providers.
 
     *Why?*: When an application is separated into modules that may be reused in other applications, each stand-alone module should be able to operate on its own including any dependent constants.
 
@@ -1946,7 +1991,7 @@ Client-side routing is important for creating a navigation flow between views an
         .module('app.customers')
         .run(appRun);
 
-    
+
     function appRun(routerHelper) {
       'ngInject';
       routerHelper.configureStates(getStates());
@@ -1972,7 +2017,7 @@ Client-side routing is important for creating a navigation flow between views an
         .module('blocks.router')
         .provider('routerHelper', routerHelperProvider);
 
-    
+
     function routerHelperProvider($locationProvider, $stateProvider, $urlRouterProvider) {
       'ngInject';
       /* jshint validthis:true */
@@ -2073,7 +2118,7 @@ _tldr; Use this guide. Attributions are appreciated._
 
 ### Copyright
 
-Copyright (c) 2014-2015 [John Papa](http://johnpapa.net) and 2015 Robert Wagner
+Copyright (c) 2014-2015 [John Papa](http://johnpapa.net) and 2016 Robert Wagner, Mike Erickson
 
 ### (The MIT License)
 Permission is hereby granted, free of charge, to any person obtaining
