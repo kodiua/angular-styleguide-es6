@@ -454,15 +454,19 @@ controllerAs can also be used in the router like so:
 
     *Why?*: Data service implementation may have very specific code to handle the data repository. This may include headers, how to talk to the data, or other services such as `$http`. Separating the logic into a data service encapsulates this logic in a single place hiding the implementation from the outside consumers (perhaps a controller), also making it easier to change the implementation.
 
+    Note: The following ES6 factory definition uses the `new` operator to instantiate the factory function, and injects the desired services used internally.
+
+    ES6: With Angular 1.x and ES6, use of factories will decrease and `services` should be used moving forward (see angular [services](#data-services))
+
   ```javascript
   /* recommended */
 
   // dataservice factory
-  angular
-      .module('app.core')
-      .factory('dataservice', dataservice);
+  angular.module('app.core')
+      .factory('dataservice', ['$http', 'logger', ($http, logger)
+        => new Dataservice($http, logger)]);
 
-  class dataservice {
+  class Dataservice {
     constructor($http, logger) {
       this.$http = $http;
       this.logger = logger;
