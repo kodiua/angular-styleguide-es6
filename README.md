@@ -1887,7 +1887,7 @@ Unit testing helps maintain clean code, as such I included some of my recommenda
         "one-var": [1, "never"],
         "quote-props": [1, "as-needed"],
         "semi": [1, "always"],
-        "space-after-keywords": [1, "always"],
+        "keyword-spacing": 1,
         "space-unary-ops": [1, {"words": true, "nonwords": false}],
         "strict": [1, "function"],
         "vars-on-top": 1,
