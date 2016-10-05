@@ -823,7 +823,9 @@ it is expected that the imported class was defined correctly, in another file, a
       });
   }
   ```
-<!--   - When a controller depends on a promise to be resolved before the controller is activated, resolve those dependencies in the `$routeProvider` before the controller logic is executed. If you need to conditionally cancel a route before the controller is activated, use a route resolver.
+
+<!-- 
+  - When a controller depends on a promise to be resolved before the controller is activated, resolve those dependencies in the `$routeProvider` before the controller logic is executed. If you need to conditionally cancel a route before the controller is activated, use a route resolver.
 
   - Use a route resolve when you want to decide to cancel the route before ever transitioning to the View.
 
@@ -906,7 +908,9 @@ it is expected that the imported class was defined correctly, in another file, a
       this.movies = moviesPrepService.movies;
     }
   }
-  ``` -->
+  ``` 
+
+-->
 
 **[Back to top](#table-of-contents)**
 
