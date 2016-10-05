@@ -798,8 +798,31 @@ it is expected that the imported class was defined correctly, in another file, a
 
 **[Back to top](#table-of-contents)**
 
-### ?????? Route Resolve Promises
+### Route Resolve Promises (need discuss)
 ###### [Style [K081](#style-k081)]
+  - Using route resolve may be cause of freeze interface and move some logic aut of controller. This move logick out of controllers to routs.
+
+  - Use route resolve for nessasery data thats very important and without this data page can't be shown or will change a lot. Forexample claims, user type and so on.
+
+  ```javascript
+  /* use it only in
+
+  // route-config.js
+
+  function config($routeProvider) {
+    $routeProvider
+      .when('/avengers', {
+        templateUrl: 'avengers.html',
+        controller: 'AvengersController',
+        controllerAs: 'avengers',
+        resolve: {
+          moviesPrepService: function(userService) {
+            return userService.gerClaimsForMovies();
+          }
+        }
+      });
+  }
+  ```
 <!-- 
   - When a controller depends on a promise to be resolved before the controller is activated, resolve those dependencies in the `$routeProvider` before the controller logic is executed. If you need to conditionally cancel a route before the controller is activated, use a route resolver.
 
@@ -884,7 +907,8 @@ it is expected that the imported class was defined correctly, in another file, a
       this.movies = moviesPrepService.movies;
     }
   }
-  ``` -->
+  ``` 
+-->
 
 **[Back to top](#table-of-contents)**
 
