@@ -238,7 +238,7 @@ it is expected that the imported class was defined correctly, in another file, a
 
   ```html
   <!-- recommended -->
-  Set in ui-route OR use component oriented approach (.component OR .directive)
+  Set in the router OR use component oriented approach (.component, .directive)
   $stateProvider
             .state("root.reports", {
                 url: "/reports",
@@ -247,16 +247,6 @@ it is expected that the imported class was defined correctly, in another file, a
                 controllerAs: 'reports'
             })
   ```
-
-controllerAs can also be used in the router like so:
-
-```js
-.when('/dropbox', {
-        templateUrl: 'views/dropbox.html',
-        controller: 'DropboxCtrl',
-        controllerAs: 'dropbox'
-      })
-```
 
 ### controllerAs Controller Syntax
 ###### [Style [Y031](#style-y031)]
@@ -382,7 +372,7 @@ controllerAs can also be used in the router like so:
 
     Note: If a View is loaded via another means besides a route, then use the `ng-controller="AvengersController as avengers"` syntax.
 
-    *Why?*: Pairing the controller in the route allows different routes to invoke different pairs of controllers and views. When controllers are assigned in the view using [`ng-controller`](https://docs.angularjs.org/api/ng/directive/ngController), that view is always associated with the same controller.
+    *Why?*: Pairing the controller in the route allows different routes to invoke different pairs of controllers and views. When controllers are assigned in the view using [`.component`](https://docs.angularjs.org/guide/component), that view is always associated with the same controller.
 
  ```javascript
   /* avoid - when using with a route and dynamic pairing is desired */
