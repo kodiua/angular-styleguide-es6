@@ -12,7 +12,7 @@ it is expected that the imported class was defined correctly, in another file, a
   1. [Single Responsibility](#single-responsibility)
   1. [Modules](#modules)
   1. [Controllers](#controllers)
-  1. [Factories](#factories)
+  1. [No Factories](#factories)
   1. [Data Services](#data-services)
   1. [Directives](#directives)
   1. [Components](#components)
