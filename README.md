@@ -231,13 +231,21 @@ it is expected that the imported class was defined correctly, in another file, a
   <div ng-controller="Customer">
       {{name}}
   </div>
+  <div ng-controller="Customer as customer">
+      {{customer.name}}
+  </div>
   ```
 
   ```html
   <!-- recommended -->
-  <div ng-controller="Customer as customer">
-      {{customer.name}}
-  </div>
+  Set in ui-route OR use component oriented approach (.component OR .directive)
+  $stateProvider
+            .state("root.reports", {
+                url: "/reports",
+                templateUrl: "reports/views/dashboard.html",
+                controller: 'reportManagementController',
+                controllerAs: 'reports'
+            })
   ```
 
 controllerAs can also be used in the router like so:
