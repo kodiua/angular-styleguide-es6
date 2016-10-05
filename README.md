@@ -31,7 +31,7 @@ it is expected that the imported class was defined correctly, in another file, a
   1. [ESLint](#eslint)
   1. [Constants](#constants)
   1. [File Templates and Snippets](#file-templates-and-snippets)
-  1. [Yeoman Generator](#yeoman-generator)
+  1. [Keoman Generator](#yeoman-generator)
   1. [Routing](#routing)
   1. [Task Automation](#task-automation)
   1. [Filters](#filters)
@@ -42,7 +42,7 @@ it is expected that the imported class was defined correctly, in another file, a
 ## Single Responsibility
 
 ### Rule of 1
-###### [Style [Y001](#style-y001)]
+###### [Style [K001](#style-k001)]
 
   - Define 1 module per file.
 
@@ -103,14 +103,14 @@ it is expected that the imported class was defined correctly, in another file, a
 ## Modules
 
 ### Avoid Naming Collisions
-###### [Style [Y020](#style-y020)]
+###### [Style [K020](#style-k020)]
 
   - Use unique naming conventions with separators for sub-modules.
 
   *Why?*: Unique names help avoid module name collisions. Separators help define modules and their submodule hierarchy. For example `app` may be your root module while `app.dashboard` and `app.users` may be modules that are used as dependencies of `app`.
 
 ### Definitions (aka Setters)
-###### [Style [Y021](#style-y021)]
+###### [Style [K021](#style-k021)]
 
   - Declare modules without a variable using the setter syntax.
 
@@ -140,7 +140,7 @@ it is expected that the imported class was defined correctly, in another file, a
   ```
 
 ### Getters
-###### [Style [Y022](#style-y022)]
+###### [Style [K022](#style-k022)]
 
   - When using a module, avoid unnecessarily using variables and instead use chaining with the getter syntax.
 
@@ -164,7 +164,7 @@ it is expected that the imported class was defined correctly, in another file, a
   ```
 
 ### Setting vs Getting
-###### [Style [Y023](#style-y023)]
+###### [Style [K023](#style-k023)]
 
   - Only set once and get for all other instances.
 
@@ -181,7 +181,7 @@ it is expected that the imported class was defined correctly, in another file, a
   ```
 
 ### Named vs Anonymous Functions
-###### [Style [Y024](#style-y024)]
+###### [Style [K024](#style-k024)]
 
   - Use named functions instead of passing an anonymous function in as a callback.
 
@@ -216,7 +216,7 @@ it is expected that the imported class was defined correctly, in another file, a
 ## Controllers
 
 ### controllerAs View Syntax
-###### [Style [Y030](#style-y030)]
+###### [Style [K030](#style-k030)]
 
   - Use the [`controllerAs`](http://www.johnpapa.net/do-you-like-your-angular-controllers-with-or-without-sugar/) syntax over the `classic controller with $scope` syntax.
 
@@ -249,7 +249,7 @@ it is expected that the imported class was defined correctly, in another file, a
   ```
 
 ### controllerAs Controller Syntax
-###### [Style [Y031](#style-y031)]
+###### [Style [K031](#style-k031)]
 
   - Use the `controllerAs` syntax over the `classic controller with $scope` syntax.
 
@@ -280,7 +280,7 @@ it is expected that the imported class was defined correctly, in another file, a
   ```
 
 ### controllerAs with fat arrows
-###### [Style [Y032](#style-y032)]
+###### [Style [K032](#style-k032)]
 
   - Using a capture variable for `this` when using the `controllerAs` syntax, is not necessary with ES6. You can simply use a fat arrow to automatically reference the correct `this` context
 
@@ -301,7 +301,7 @@ it is expected that the imported class was defined correctly, in another file, a
   ```
 
 ### Defer Controller Logic to Services
-###### [Style [Y035](#style-y035)]
+###### [Style [K035](#style-k035)]
 
   - Defer logic in a controller by delegating to services and factories.
 
@@ -359,21 +359,20 @@ it is expected that the imported class was defined correctly, in another file, a
   ```
 
 ### Keep Controllers Focused
-###### [Style [Y037](#style-y037)]
+###### [Style [K037](#style-k037)]
 
   - Define a controller for a view, and try not to reuse the controller for other views. Instead, move reusable logic to factories and keep the controller simple and focused on its view.
 
     *Why?*: Reusing controllers with several views is brittle and good end-to-end (e2e) test coverage is required to ensure stability across large applications.
 
 ### Assigning Controllers
-###### [Style [Y038](#style-y038)]
+###### [Style [K038](#style-k038)]
 
   - When a controller must be paired with a view and either entity may be re-used by other controllers or views, define controllers along with their routes.
 
     Note: If a View is loaded via another means besides a route, then use the `ng-controller="AvengersController as avengers"` syntax.
 
-    *Why?*: Pairing the controller in the route allows different routes to invoke different pairs of controllers and views. When controllers are assigned in the view using [`.component`](https://docs.angularjs.org/guide/component), that view is always associated with the same controller.
-
+    *Why?*: Pairing the controller in the route allows different routes to invoke different pairs of controllers and views. When controllers are assigned in the view using [`.component`](https://docs.angularjs.org/guide/component)
  ```javascript
   /* avoid - when using with a route and dynamic pairing is desired */
 
@@ -423,26 +422,19 @@ it is expected that the imported class was defined correctly, in another file, a
 **[Back to top](#table-of-contents)**
 
 
-## Factories
+## No factories
 
-### Single Responsibility
-###### [Style [Y050](#style-y050)]
+### Use Services instead of Factories
+###### [Style [K050](#style-k050)]
 
-  - Factories should have a [single responsibility](http://en.wikipedia.org/wiki/Single_responsibility_principle), that is encapsulated by its context. Once a factory begins to exceed that singular purpose, a new factory should be created.
-
-### Singletons
-###### [Style [Y051](#style-y051)]
-
-  - Factories are singletons and return an object that contains the members of the service.
-
-    Note: [All Angular services are singletons](https://docs.angularjs.org/guide/services).
+  - [SERVICE VS FACTORY](http://blog.thoughtram.io/angular/2015/07/07/service-vs-factory-once-and-for-all.html)
 
 **[Back to top](#table-of-contents)**
 
 ## Data Services
 
 ### Separate Data Calls
-###### [Style [Y060](#style-y060)]
+###### [Style [K060](#style-k060)]
 
   - Refactor logic for making data operations and interacting with data to a factory. Make data services responsible for XHR calls, local storage, stashing in memory, or any other data operations.
 
@@ -486,7 +478,7 @@ it is expected that the imported class was defined correctly, in another file, a
   ```
 
 ### Return a Promise from Data Calls
-###### [Style [Y061](#style-y061)]
+###### [Style [K061](#style-k061)]
 
   - When calling a data service that returns a promise such as `$http`, return a promise in your calling function too.
 
@@ -532,7 +524,7 @@ it is expected that the imported class was defined correctly, in another file, a
 
 ## Directives
 ### Limit 1 Per File
-###### [Style [Y070](#style-y070)]
+###### [Style [K070](#style-k070)]
 
   - Create one directive per file. Name the file for the directive.
 
@@ -607,14 +599,14 @@ it is expected that the imported class was defined correctly, in another file, a
     Note: There are many naming options for directives, especially since they can be used in narrow or wide scopes. Choose one that makes the directive and its file name distinct and clear. Some examples are below, but see the [Naming](#naming) section for more recommendations.
 
 ### Manipulate DOM in a Directive
-###### [Style [Y072](#style-y072)]
+###### [Style [K072](#style-k072)]
 
   - When manipulating the DOM directly, use a directive. If alternative ways can be used such as using CSS to set styles or the [animation services](https://docs.angularjs.org/api/ngAnimate), Angular templating, [`ngShow`](https://docs.angularjs.org/api/ng/directive/ngShow) or [`ngHide`](https://docs.angularjs.org/api/ng/directive/ngHide), then use those instead. For example, if the directive simply hides and shows, use ngHide/ngShow.
 
     *Why?*: DOM manipulation can be difficult to test, debug, and there are often better ways (e.g. CSS, animations, templates)
 
 ### Provide a Unique Directive Prefix
-###### [Style [Y073](#style-y073)]
+###### [Style [K073](#style-k073)]
 
   - Provide a short, unique and descriptive directive prefix such as `acmeSalesCustomerInfo` which would be declared in HTML as `acme-sales-customer-info`.
 
@@ -623,7 +615,7 @@ it is expected that the imported class was defined correctly, in another file, a
     Note: Avoid `ng-` as these are reserved for Angular directives. Research widely used directives to avoid naming conflicts, such as `ion-` for the [Ionic Framework](http://ionicframework.com/).
 
 ### Restrict to Elements and Attributes
-###### [Style [Y074](#style-y074)]
+###### [Style [K074](#style-k074)]
 
   - When creating a directive that makes sense as a stand-alone element, allow restrict `E` (custom element) and optionally restrict `A` (custom attribute). Generally, if it could be its own control, `E` is appropriate. General guideline is allow `EA` but lean towards implementing as an element when it's stand-alone and as an attribute when it enhances its existing DOM element.
 
@@ -675,7 +667,7 @@ it is expected that the imported class was defined correctly, in another file, a
   ```
 
 ### Directives and ControllerAs
-###### [Style [Y075](#style-y075)]
+###### [Style [K075](#style-k075)]
 
   - Use `controller as` syntax with a directive to be consistent with using `controller as` with view and controller pairings.
 
@@ -744,7 +736,7 @@ it is expected that the imported class was defined correctly, in another file, a
   }
   ```
 
-###### [Style [Y076](#style-y076)]
+###### [Style [K076](#style-k076)]
 
   - Use `bindToController = true` when using `controller as` syntax with a directive when you want to bind the outer scope to the directive's controller's scope.
 
@@ -791,7 +783,7 @@ it is expected that the imported class was defined correctly, in another file, a
 **[Back to top](#table-of-contents)**
 
 ### Route Resolve Promises
-###### [Style [Y081](#style-y081)]
+###### [Style [K081](#style-k081)]
 
   - When a controller depends on a promise to be resolved before the controller is activated, resolve those dependencies in the `$routeProvider` before the controller logic is executed. If you need to conditionally cancel a route before the controller is activated, use a route resolver.
 
@@ -801,7 +793,7 @@ it is expected that the imported class was defined correctly, in another file, a
 
     *Why?*: The code executes after the route and in the controller’s activate function. The View starts to load right away. Data binding kicks in when the activate promise resolves. A “busy” animation can be shown during the view transition (via `ng-view` or `ui-view`)
 
-    Note: The code executes before the route via a promise. Rejecting the promise cancels the route. Resolve makes the new view wait for the route to resolve. A “busy” animation can be shown before the resolve and through the view transition. If you want to get to the View faster and do not require a checkpoint to decide if you can get to the View, consider the [controller `activate` technique](#style-y080) instead.
+    Note: The code executes before the route via a promise. Rejecting the promise cancels the route. Resolve makes the new view wait for the route to resolve. A “busy” animation can be shown before the resolve and through the view transition. If you want to get to the View faster and do not require a checkpoint to decide if you can get to the View, consider the [controller `activate` technique](#style-k080) instead.
 
   ```javascript
   /* avoid */
@@ -932,7 +924,7 @@ angular.module('app')
 ## Minification and Annotation
 
 ### ng-annotate
-###### [Style [Y100](#style-y100)]
+###### [Style [K100](#style-k100)]
 
   - Use [ng-annotate](//github.com/olov/ng-annotate) for [Gulp](http://gulpjs.com) or [Grunt](http://gruntjs.com) and comment functions that need automated dependency injection using `'ngInject'`
 
@@ -982,7 +974,7 @@ angular.module('app')
 ## Exception Handling
 
 ### decorators
-###### [Style [Y110](#style-y110)]
+###### [Style [K110](#style-k110)]
 
   - Use a [decorator](https://docs.angularjs.org/api/auto/service/$provide#decorator), at config time using the [`$provide`](https://docs.angularjs.org/api/auto/service/$provide) service, on the [`$exceptionHandler`](https://docs.angularjs.org/api/ng/service/$exceptionHandler) service to perform custom actions when exceptions occur.
 
@@ -1019,7 +1011,7 @@ angular.module('app')
     ```
 
 ### Exception Catchers
-###### [Style [Y111](#style-y111)]
+###### [Style [K111](#style-k111)]
 
   - Create a factory that exposes an interface to catch and gracefully handle exceptions.
 
@@ -1044,7 +1036,7 @@ angular.module('app')
     ```
 
 ### Route Errors
-###### [Style [Y112](#style-y112)]
+###### [Style [K112](#style-k112)]
 
   - Handle and log all routing errors using [`$routeChangeError`](https://docs.angularjs.org/api/ngRoute/service/$route#$routeChangeError).
 
@@ -1093,7 +1085,7 @@ angular.module('app')
 ## Naming
 
 ### Naming Guidelines
-###### [Style [Y120](#style-y120)]
+###### [Style [K120](#style-k120)]
 
   - Use consistent names for all entites following a pattern that describes the entities feature then (optionally) its type. My recommended pattern is `feature.type.js`. There are 2 names for most assets:
     * the file name (`avengers.controller.js`)
@@ -1104,7 +1096,7 @@ angular.module('app')
     *Why?*: The naming conventions should simply help you find your code faster and make it easier to understand.
 
 ### Feature File Names
-###### [Style [Y121](#style-y121)]
+###### [Style [K121](#style-k121)]
 
   - Use consistent names for all entities following a pattern that describes the entity's feature then (optionally) its type. My recommended pattern is `feature.type.js`.
 
@@ -1171,7 +1163,7 @@ angular.module('app')
     ```
 
 ### Test File Names
-###### [Style [Y122](#style-y122)]
+###### [Style [K122](#style-k122)]
 
   - Name test specifications similar to the component they test with a suffix of `spec`.
 
@@ -1190,7 +1182,7 @@ angular.module('app')
     ```
 
 ### Controller Names
-###### [Style [Y123](#style-y123)]
+###### [Style [K123](#style-k123)]
 
   - Use consistent names for all controllers named after their feature. Use UpperCamelCase for controllers, as they are classes.
 
@@ -1211,7 +1203,7 @@ angular.module('app')
     ```
 
 ### Controller Name Suffix
-###### [Style [Y124](#style-y124)]
+###### [Style [K124](#style-k124)]
 
   - Append the controller name with the suffix `Controller`.
 
@@ -1230,7 +1222,7 @@ angular.module('app')
     ```
 
 ### Factory and Service Names
-###### [Style [Y125](#style-y125)]
+###### [Style [K125](#style-k125)]
 
   - Use consistent names for all factories and services named after their feature. Use camel-casing for services and factories. Avoid prefixing factories and services with `$`. Only suffix service and factories with `Service` when it is not clear what they are (i.e. when they are nouns).
 
@@ -1273,7 +1265,7 @@ angular.module('app')
     ```
 
 ### Directive Names
-###### [Style [Y126](#style-y126)]
+###### [Style [K126](#style-k126)]
 
   - Use consistent names for all directives using camel-case. Use a short prefix to describe the area that the directives belong (some example are company prefix or project prefix).
 
@@ -1294,7 +1286,7 @@ angular.module('app')
     ```
 
 ### Modules
-###### [Style [Y127](#style-y127)]
+###### [Style [K127](#style-k127)]
 
   - When there are multiple modules, the main module file is named `app.module.js` while other dependent modules are named after what they represent. For example, an admin module is named `admin.module.js`. The respective registered module names would be `app` and `admin`.
 
@@ -1303,7 +1295,7 @@ angular.module('app')
     *Why?*: Provides easy way to use task automation to load all module definitions first, then all other angular files (for bundling).
 
 ### Configuration
-###### [Style [Y128](#style-y128)]
+###### [Style [K128](#style-k128)]
 
   - Separate configuration for a module into its own file named after the module. A configuration file for the main `app` module is named `app.config.js` (or simply `config.js`). A configuration for a module named `admin.module.js` is named `admin.config.js`.
 
@@ -1312,7 +1304,7 @@ angular.module('app')
     *Why?*: Provides an identifiable place to set configuration for a module.
 
 ### Routes
-###### [Style [Y129](#style-y129)]
+###### [Style [K129](#style-k129)]
 
   - Separate route configuration into its own file. Examples might be `app.route.js` for the main module and `admin.route.js` for the `admin` module. Even in smaller apps I prefer this separation from the rest of the configuration.
 
@@ -1320,7 +1312,7 @@ angular.module('app')
 
 ## Application Structure LIFT Principle
 ### LIFT
-###### [Style [Y140](#style-y140)]
+###### [Style [K140](#style-k140)]
 
   - Structure your app such that you can `L`ocate your code quickly, `I`dentify the code at a glance, keep the `F`lattest structure you can, and `T`ry to stay DRY. The structure should follow these 4 basic guidelines.
 
@@ -1334,7 +1326,7 @@ angular.module('app')
     4. `T`ry to stay DRY (Don’t Repeat Yourself) or T-DRY
 
 ### Locate
-###### [Style [Y141](#style-y141)]
+###### [Style [K141](#style-k141)]
 
   - Make locating your code intuitive, simple and fast.
 
@@ -1359,21 +1351,21 @@ angular.module('app')
     ```
 
 ### Identify
-###### [Style [Y142](#style-y142)]
+###### [Style [K142](#style-k142)]
 
   - When you look at a file you should instantly know what it contains and represents.
 
     *Why?*: You spend less time hunting and pecking for code, and become more efficient. If this means you want longer file names, then so be it. Be descriptive with file names and keeping the contents of the file to exactly 1 entity. Avoid files with multiple controllers, multiple services, or a mixture. There are deviations of the 1 per file rule when I have a set of very small features that are all related to each other, they are still easily identifiable.
 
 ### Flat
-###### [Style [Y143](#style-y143)]
+###### [Style [K143](#style-k143)]
 
   - Keep a flat folder structure as long as possible. When you get to 7+ files, begin considering separation.
 
     *Why?*: Nobody wants to search 7 levels of folders to find a file. Think about menus on web sites … anything deeper than 2 should take serious consideration. In a folder structure there is no hard and fast number rule, but when a folder has 7-10 files, that may be time to create subfolders. Base it on your comfort level. Use a flatter structure until there is an obvious value (to help the rest of LIFT) in creating a new folder.
 
 ### T-DRY (Try to Stick to DRY)
-###### [Style [Y144](#style-y144)]
+###### [Style [K144](#style-k144)]
 
   - Be DRY, but don't go nuts and sacrifice readability.
 
@@ -1384,7 +1376,7 @@ angular.module('app')
 ## Application Structure
 
 ### Overall Guidelines
-###### [Style [Y150](#style-y150)]
+###### [Style [K150](#style-k150)]
 
   - Have a near term view of implementation and a long term vision. In other words, start small but keep in mind on where the app is heading down the road. All of the app's code goes in a root folder named `app`. All content is 1 feature per file. Each controller, service, module, view is in its own file. All 3rd party vendor scripts are stored in another root folder and not in the `app` folder. I didn't write them and I don't want them cluttering my app (`bower_components`, `scripts`, `lib`).
 
@@ -1392,7 +1384,7 @@ angular.module('app')
 
 
 ### Folders-by-Feature Structure
-###### [Style [Y152](#style-y152)]
+###### [Style [K152](#style-k152)]
 
   - Create folders named for the feature they represent. When a folder grows to contain more than 7 files, start to consider creating a folder for them. Your threshold may be different, so adjust as needed.
 
@@ -1493,21 +1485,21 @@ angular.module('app')
 ## Modularity
 
 ### Many Small, Self Contained Modules
-###### [Style [Y160](#style-y160)]
+###### [Style [K160](#style-k160)]
 
   - Create small modules that encapsulate one responsibility.
 
     *Why?*: Modular applications make it easy to plug and go as they allow the development teams to build vertical slices of the applications and roll out incrementally. This means we can plug in new features as we develop them.
 
 ### Create an App Module
-###### [Style [Y161](#style-y161)]
+###### [Style [K161](#style-k161)]
 
   - Create an application root module whose role is pull together all of the modules and features of your application. Name this for your application.
 
     *Why?*: Angular encourages modularity and separation patterns. Creating an application root module whose role is to tie your other modules together provides a very straightforward way to add or remove modules from your application.
 
 ### Keep the App Module Thin
-###### [Style [Y162](#style-y162)]
+###### [Style [K162](#style-k162)]
 
   - Only put logic for pulling together the app in the application module. Leave features in their own modules.
 
@@ -1516,7 +1508,7 @@ angular.module('app')
     *Why?*: The app module becomes a manifest that describes which modules help define the application.
 
 ### Feature Areas are Modules
-###### [Style [Y163](#style-y163)]
+###### [Style [K163](#style-k163)]
 
   - Create modules that represent feature areas, such as layout, reusable and shared services, dashboards, and app specific features (e.g. customers, admin, sales).
 
@@ -1527,14 +1519,14 @@ angular.module('app')
     *Why?*: Separating feature areas into modules makes it easier to test the modules in isolation and reuse code.
 
 ### Reusable Blocks are Modules
-###### [Style [Y164](#style-y164)]
+###### [Style [K164](#style-k164)]
 
   - Create modules that represent reusable application blocks for common services such as exception handling, logging, diagnostics, security, and local data stashing.
 
     *Why?*: These types of features are needed in many applications, so by keeping them separated in their own modules they can be application generic and be reused across applications.
 
 ### Module Dependencies
-###### [Style [Y165](#style-y165)]
+###### [Style [K165](#style-k165)]
 
   - The application root module depends on the app specific feature modules and any shared or reusable modules.
 
@@ -1557,7 +1549,7 @@ angular.module('app')
 ## Startup Logic
 
 ### Run Blocks
-###### [Style [Y171](#style-y171)]
+###### [Style [K171](#style-k171)]
 
   - Any code that needs to run when an application starts should be declared in a factory, exposed via a function, and injected into the [run block](https://docs.angularjs.org/guide/module#module-loading-dependencies).
 
@@ -1580,14 +1572,14 @@ angular.module('app')
 ## Angular $ Wrapper Services
 
 ### $document and $window
-###### [Style [Y180](#style-y180)]
+###### [Style [K180](#style-k180)]
 
   - Use [`$document`](https://docs.angularjs.org/api/ng/service/$document) and [`$window`](https://docs.angularjs.org/api/ng/service/$window) instead of `document` and `window`.
 
     *Why?*: These services are wrapped by Angular and more easily testable than using document and window in tests. This helps you avoid having to mock document and window yourself.
 
 ### $timeout and $interval
-###### [Style [Y181](#style-y181)]
+###### [Style [K181](#style-k181)]
 
   - Use [`$timeout`](https://docs.angularjs.org/api/ng/service/$timeout) and [`$interval`](https://docs.angularjs.org/api/ng/service/$interval) instead of `setTimeout` and `setInterval` .
 
@@ -1599,7 +1591,7 @@ angular.module('app')
 Unit testing helps maintain clean code, as such I included some of my recommendations for unit testing foundations with links for more information.
 
 ### Write Tests with Stories
-###### [Style [Y190](#style-y190)]
+###### [Style [K190](#style-k190)]
 
   - Write a set of tests for every story. Start with an empty test and fill them in as you write the code for the story.
 
@@ -1626,7 +1618,7 @@ Unit testing helps maintain clean code, as such I included some of my recommenda
     ```
 
 ### Testing Library
-###### [Style [Y191](#style-y191)]
+###### [Style [K191](#style-k191)]
 
   - Use [Jasmine](http://jasmine.github.io/) or [Mocha](http://mochajs.org) for unit testing.
 
@@ -1635,7 +1627,7 @@ Unit testing helps maintain clean code, as such I included some of my recommenda
     Note: When using Mocha, also consider choosing an assert library such as [Chai](http://chaijs.com). I prefer Mocha.
 
 ### Test Runner
-###### [Style [Y192](#style-y192)]
+###### [Style [K192](#style-k192)]
 
   - Use [Karma](http://karma-runner.github.io) as a test runner.
 
@@ -1694,7 +1686,7 @@ Unit testing helps maintain clean code, as such I included some of my recommenda
     ```
 
 ### Stubbing and Spying
-###### [Style [Y193](#style-y193)]
+###### [Style [K193](#style-k193)]
 
   - Use [Sinon](http://sinonjs.org/) for stubbing and spying.
 
@@ -1705,7 +1697,7 @@ Unit testing helps maintain clean code, as such I included some of my recommenda
     *Why?*: Sinon has descriptive messages when tests fail the assertions.
 
 ### Headless Browser
-###### [Style [Y194](#style-y194)]
+###### [Style [K194](#style-k194)]
 
   - Use [PhantomJS](http://phantomjs.org/) to run your tests on a server.
 
@@ -1714,14 +1706,14 @@ Unit testing helps maintain clean code, as such I included some of my recommenda
     Note: You should still test on all browsers in your environment, as appropriate for your target audience.
 
 ### Code Analysis
-###### [Style [Y195](#style-y195)]
+###### [Style [K195](#style-k195)]
 
   - Run ESLint on your tests.
 
     *Why?*: Tests are code. ESLint can help identify code quality issues that may cause the test to work improperly.
 
 ### Organizing Tests
-###### [Style [Y197](#style-y197)]
+###### [Style [K197](#style-k197)]
 
   - Place unit test files (specs) side-by-side with your client code. Place specs that cover server integration or test multiple components in a separate `tests` folder.
 
@@ -1752,7 +1744,7 @@ Unit testing helps maintain clean code, as such I included some of my recommenda
 ## Animations
 
 ### Usage
-###### [Style [Y210](#style-y210)]
+###### [Style [K210](#style-k210)]
 
   - Use subtle [animations with Angular](https://docs.angularjs.org/guide/animations) to transition between states for views and primary visual elements. Include the [ngAnimate module](https://docs.angularjs.org/api/ngAnimate). The 3 keys are subtle, smooth, seamless.
 
@@ -1761,14 +1753,14 @@ Unit testing helps maintain clean code, as such I included some of my recommenda
     *Why?*: Subtle animations can improve perceived performance as views transition.
 
 ### Sub Second
-###### [Style [Y211](#style-y211)]
+###### [Style [K211](#style-k211)]
 
   - Use short durations for animations. I generally start with 300ms and adjust until appropriate.
 
     *Why?*: Long animations can have the reverse affect on User Experience and perceived performance by giving the appearance of a slow application.
 
 ### animate.css
-###### [Style [Y212](#style-y212)]
+###### [Style [K212](#style-k212)]
 
   - Use [animate.css](http://daneden.github.io/animate.css/) for conventional animations.
 
@@ -1785,7 +1777,7 @@ Unit testing helps maintain clean code, as such I included some of my recommenda
 ## Comments
 
 ### jsDoc
-###### [Style [Y220](#style-y220)]
+###### [Style [K220](#style-k220)]
 
   - If planning to produce documentation, use [`jsDoc`](http://usejsdoc.org/) syntax to document function names, description, params and returns. Use `@namespace` and `@memberOf` to match your app structure.
 
@@ -1837,7 +1829,7 @@ Unit testing helps maintain clean code, as such I included some of my recommenda
 ## ESLint
 
 ### Use an Options File
-###### [Style [Y230](#style-y230)]
+###### [Style [K230](#style-k230)]
 
   - Use ESLint for linting your JavaScript and be sure to customize the .eslintrc file and include in source control. See the [ESLint docs](http://eslint.org/docs/rules/) for details on the options.
 
@@ -1913,7 +1905,7 @@ Unit testing helps maintain clean code, as such I included some of my recommenda
 ## Constants
 
 ### Vendor Globals
-###### [Style [Y240](#style-y240)]
+###### [Style [K240](#style-k240)]
 
   - Create an Angular Constant for vendor libraries' global variables.
 
@@ -1933,7 +1925,7 @@ Unit testing helps maintain clean code, as such I included some of my recommenda
     })();
     ```
 
-###### [Style [Y241](#style-y241)]
+###### [Style [K241](#style-k241)]
 
   - Use constants for values that do not change and do not come from another service. When constants are used only for a module that may be reused in multiple applications, place constants in a file per module named after the module. Until this is required, keep constants in the main module in a `constants.js` file.
 
@@ -1962,7 +1954,7 @@ Unit testing helps maintain clean code, as such I included some of my recommenda
 
 
 ## Yeoman Generator
-###### [Style [Y260](#style-y260)]
+###### [Style [K260](#style-k260)]
 
 You can use the [generator-gulp-angular](https://github.com/Swiip/generator-gulp-angular) to create an app that serves as a starting point for Angular that follows this style guide.
 
@@ -1990,7 +1982,7 @@ You can use the [generator-gulp-angular](https://github.com/Swiip/generator-gulp
 ## Routing
 Client-side routing is important for creating a navigation flow between views and composing views that are made of many smaller templates and directives.
 
-###### [Style [Y270](#style-y270)]
+###### [Style [K270](#style-k270)]
 
   - Use the [AngularUI Router](http://angular-ui.github.io/ui-router/) for client-side routing.
 
@@ -2066,7 +2058,7 @@ Client-side routing is important for creating a navigation flow between views an
     }
     ```
 
-###### [Style [Y271](#style-y271)]
+###### [Style [K271](#style-k271)]
 
   - Define routes for views in the module where they exist. Each module should contain the routes for the views in the module.
 
@@ -2083,7 +2075,7 @@ Use [Gulp](http://gulpjs.com) or [Grunt](http://gruntjs.com) for creating automa
 
 > Learn more about gulp and patterns for task automation in my [Gulp Pluralsight course](http://jpapa.me/gulpps)
 
-###### [Style [Y400](#style-y400)]
+###### [Style [K400](#style-k400)]
 
   - Use task automation to list module definition files `*.module.js` before all other application JavaScript files.
 
@@ -2105,7 +2097,7 @@ Use [Gulp](http://gulpjs.com) or [Grunt](http://gruntjs.com) for creating automa
 
 ## Filters
 
-###### [Style [Y420](#style-y420)]
+###### [Style [K420](#style-k420)]
 
   - Avoid using filters for scanning all properties of a complex object graph. Use filters for select properties.
 
