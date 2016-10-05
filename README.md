@@ -605,6 +605,22 @@ it is expected that the imported class was defined correctly, in another file, a
 
     *Why?*: DOM manipulation can be difficult to test, debug, and there are often better ways (e.g. CSS, animations, templates)
 
+  ```javascript
+  /* avoid */
+
+  /* patient.controller.js */
+  class sharedSpinner {
+      rowDelete(id) {
+        $('.'+id).remove();
+    }
+  }
+
+  /* recommended */
+
+  Use .directive
+
+  ```
+
 ### Provide a Unique Directive Prefix
 ###### [Style [K073](#style-k073)]
 
@@ -782,9 +798,9 @@ it is expected that the imported class was defined correctly, in another file, a
 
 **[Back to top](#table-of-contents)**
 
-### Route Resolve Promises
+### ?????? Route Resolve Promises
 ###### [Style [K081](#style-k081)]
-
+<!-- 
   - When a controller depends on a promise to be resolved before the controller is activated, resolve those dependencies in the `$routeProvider` before the controller logic is executed. If you need to conditionally cancel a route before the controller is activated, use a route resolver.
 
   - Use a route resolve when you want to decide to cancel the route before ever transitioning to the View.
@@ -868,7 +884,7 @@ it is expected that the imported class was defined correctly, in another file, a
       this.movies = moviesPrepService.movies;
     }
   }
-  ```
+  ``` -->
 
 **[Back to top](#table-of-contents)**
 
