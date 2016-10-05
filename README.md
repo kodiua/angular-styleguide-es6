@@ -798,9 +798,9 @@ it is expected that the imported class was defined correctly, in another file, a
 
 **[Back to top](#table-of-contents)**
 
-### Route Resolve Promises (need discuss)
+### Route Resolve Promises
 ###### [Style [K081](#style-k081)]
-  - Using route resolve may be cause of freeze interface and move some logic aut of controller. This move logick out of controllers to routs.
+  - Using route resolve may be cause of freeze interface and move some logic out of controller. Move logic out of controller multiply overhead with refactoring or editing.
 
   - Use route resolve for nessasery data thats very important and without this data page can't be shown or will change a lot. Forexample claims, user type and so on.
 
